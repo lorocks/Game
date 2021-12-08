@@ -1,15 +1,16 @@
 import pygame
-import os
 import random
 import sys
-import cv2
-import numpy as np
+
+
 from Models import *
+from Videos import *
+from Variables import *
 
 pygame.init()
 
-# Global Constants
-SCREEN_HEIGHT = 600
+
+"""SCREEN_HEIGHT = 600
 SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
@@ -33,6 +34,7 @@ DRONE = [pygame.image.load(os.path.join("Assets/drone", "Drone.png")),
 BG = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
 
 BIRDVID = cv2.VideoCapture("Assets/bird/videoplayback.mp4")
+CATVID = cv2.VideoCapture("Assets/cat/cat.mp4")"""
 
 """class Man:
     X_POS = 80
@@ -128,6 +130,7 @@ class SmallCactus(Obstacle):
         self.type = random.randint(0, 2)
         super().__init__(image, self.type)
         self.rect.y = 325
+        
 
 
 class LargeCactus(Obstacle):
@@ -150,24 +153,56 @@ class Drone(Obstacle):
         SCREEN.blit(self.image[self.index//5], self.rect)
         self.index += 1
 
-"""
-def movie():
-    while (BIRDVID.isOpened()):
-        ret, frame = BIRDVID.read()
-        if ret == True:
-            cv2.imshow('Frame', frame)
-            if cv2.waitKey(25) & 0xFF == ord('q'):
+
+def movie(num):
+    if num == 1:
+        while (BIRDVID.isOpened()):
+            ret, frame = BIRDVID.read()
+            if ret == True:
+                cv2.imshow('Frame', frame)
+                if cv2.waitKey(25) & 0xFF == ord('q'):
+                    break
+            else:
                 break
-        else:
-            break
-    BIRDVID.release()
+        BIRDVID.release()
+    if num == 2:
+        while (CATVID.isOpened()):
+            ret, frame = CATVID.read()
+            if ret == True:
+                cv2.imshow('Frame', frame)
+                if cv2.waitKey(25) & 0xFF == ord('q'):
+                    break
+            else:
+                break
+        CATVID.release()
     cv2.destroyAllWindows()
 
+"""
 
 
+def background():
+    global x_pos_bg, y_pos_bg
+    image_width = BG.get_width()
+    SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
+    SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
+    if x_pos_bg <= -image_width:
+        SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
+        x_pos_bg = 0
+    x_pos_bg -= game_speed
 
-def main():
-    global game_speed, x_pos_bg, y_pos_bg, points, obstacles
+def score():
+    global points, game_speed
+    points += 1
+    if points % 100 == 0:
+        game_speed += 1
+
+    text = font.render("Points: " + str(points), True, (0, 0, 0))
+    textRect = text.get_rect()
+    textRect.center = (1000, 40)
+    SCREEN.blit(text, textRect)
+
+def FirstStage():
+    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, font
     run = True
     clock = pygame.time.Clock()
     player = Man()
@@ -175,11 +210,11 @@ def main():
     x_pos_bg = 0
     y_pos_bg = 380
     points = 0
-    font = pygame.font.Font('freesansbold.ttf', 20)
     obstacles = []
     death_count = 0
+    font = pygame.font.Font('freesansbold.ttf', 20)
 
-    def score():
+    """def score():
         global points, game_speed
         points += 1
         if points % 100 == 0:
@@ -198,7 +233,7 @@ def main():
         if x_pos_bg <= -image_width:
             SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
             x_pos_bg = 0
-        x_pos_bg -= game_speed
+        x_pos_bg -= game_speed"""
 
     while run:
         for event in pygame.event.get():
@@ -228,13 +263,12 @@ def main():
             obstacle.update(game_speed,obstacles)
             if player.man_rect.colliderect(obstacle.rect):
                 pygame.time.delay(2000)
+                movie(obstacle.video())
                 death_count += 1
                 menu(death_count)
 
         score()
 
-        if points == 500:
-            movie()
 
         clock.tick(30)
         pygame.display.update()
@@ -245,13 +279,13 @@ def menu(death_count):
     run = True
     while run:
         SCREEN.fill((255, 255, 255))
-        font = pygame.font.Font('freesansbold.ttf', 30)
+        font_menu = pygame.font.Font('freesansbold.ttf', 30)
 
         if death_count == 0:
-            text = font.render("Press any Key to Start: Reach 500 for Bird", True, (0, 0, 0))
+            text = font_menu.render("Press any Key to Start: Reach 500 for Bird", True, (0, 0, 0))
         elif death_count > 0:
-            text = font.render("Press any Key to Restart", True, (0, 0, 0))
-            score = font.render("Your Score: " + str(points), True, (0, 0, 0))
+            text = font_menu.render("Press any Key to Restart", True, (0, 0, 0))
+            score = font_menu.render("Your Score: " + str(points), True, (0, 0, 0))
             scoreRect = score.get_rect()
             scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
             SCREEN.blit(score, scoreRect)
@@ -266,7 +300,7 @@ def menu(death_count):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                main()
+                FirstStage()
 
 
 menu(death_count=0)

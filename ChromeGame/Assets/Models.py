@@ -1,30 +1,7 @@
 import pygame
-import os
 import random
 
-
-SCREEN_HEIGHT = 600
-SCREEN_WIDTH = 1100
-SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-
-RUNNING = pygame.image.load(os.path.join("Assets/man", "Untitled.png"))
-
-JUMPING = pygame.image.load(os.path.join("Assets/man", "Untitled.png"))
-
-DUCKING = pygame.image.load(os.path.join("Assets/man", "Untitled1.png"))
-
-SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus2.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus3.png"))]
-LARGE_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus1.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus2.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus3.png"))]
-
-DRONE = [pygame.image.load(os.path.join("Assets/drone", "Drone.png")),
-        pygame.image.load(os.path.join("Assets/drone", "DroneRed.png"))]
-
-BG = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
+from Variables import *
 
 class Man:
     X_POS = 80
@@ -121,12 +98,20 @@ class SmallCactus(Obstacle):
         super().__init__(image, self.type)
         self.rect.y = 325
 
+    def video(self):
+        return 1
+        #return self.type
+
 
 class LargeCactus(Obstacle):
     def __init__(self, image):
         self.type = random.randint(0, 2)
         super().__init__(image, self.type)
         self.rect.y = 300
+
+    def video(self):
+        value = self.type + 3
+        return 2
 
 
 class Drone(Obstacle):
@@ -141,3 +126,7 @@ class Drone(Obstacle):
             self.index = 0
         SCREEN.blit(self.image[self.index//5], self.rect)
         self.index += 1
+
+    def video(self):
+        return 2
+        #return 7
