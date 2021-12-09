@@ -1,76 +1,71 @@
 import pygame
 import random
 
-from Variables import *
+from Init import *
 
 class Man:
     X_POS = 80
-    Y_POS = 310
+    Y_POS = 300
     Y_POS_DUCK = 340
-    JUMP_VEL = 8.5
+    JUMP_SPEED = 8.5
 
     def __init__(self):
-        self.duck_img = DUCKING
-        self.run_img = RUNNING
-        self.jump_img = JUMPING
+        self.ducking_img = DUCKING
+        self.running_img = RUNNING
+        self.jumping_img = JUMPING
 
-        self.man_duck = False
-        self.man_run = True
-        self.man_jump = False
+        self.ducking = False
+        self.running = True
+        self.jumping = False
 
-        self.step_index = 0
-        self.jump_vel = self.JUMP_VEL
-        self.image = self.run_img
+        self.jump_speed = self.JUMP_SPEED
+        self.image = self.running_img
         self.man_rect = self.image.get_rect()
         self.man_rect.x = self.X_POS
         self.man_rect.y = self.Y_POS
 
     def update(self, userInput):
-        if self.man_duck:
+        if self.ducking:
             self.duck()
-        if self.man_run:
+        if self.running:
             self.run()
-        if self.man_jump:
+        if self.jumping:
             self.jump()
 
-        if self.step_index >= 10:
-            self.step_index = 0
 
-        if userInput[pygame.K_UP] and not self.man_jump:
-            self.man_duck = False
-            self.man_run = False
-            self.man_jump = True
-        elif userInput[pygame.K_DOWN] and not self.man_jump:
-            self.man_duck = True
-            self.man_run = False
-            self.man_jump = False
-        elif not (self.man_jump or userInput[pygame.K_DOWN]):
-            self.man_duck = False
-            self.man_run = True
-            self.man_jump = False
+        if userInput[pygame.K_UP] and not self.jumping:
+            self.ducking = False
+            self.running = False
+            self.jumping = True
+        elif userInput[pygame.K_DOWN] and not self.jumping:
+            self.ducking = True
+            self.running = False
+            self.jumping = False
+        elif not (self.jumping or userInput[pygame.K_DOWN]):
+            self.ducking = False
+            self.running = True
+            self.jumping = False
 
     def duck(self):
-        self.image = self.duck_img
+        self.image = self.ducking_img
         self.man_rect = self.image.get_rect()
         self.man_rect.x = self.X_POS
         self.man_rect.y = self.Y_POS_DUCK
-        self.step_index += 1
 
     def run(self):
-        self.image = self.run_img
+        self.image = self.running_img
         self.man_rect = self.image.get_rect()
         self.man_rect.x = self.X_POS
         self.man_rect.y = self.Y_POS
-        self.step_index += 1
 
     def jump(self):
-        self.image = self.jump_img
-        if self.man_jump:
-            self.man_rect.y -= self.jump_vel * 4
-            self.jump_vel -= 0.8
-        if self.jump_vel < - self.JUMP_VEL:
-            self.man_jump = False
-            self.jump_vel = self.JUMP_VEL
+        self.image = self.jumping_img
+        if self.jumping:
+            self.man_rect.y -= self.jump_speed * 4
+            self.jump_speed -= 0.8
+        if self.jump_speed < - self.JUMP_SPEED:
+            self.jumping = False
+            self.jump_speed = self.JUMP_SPEED
 
     def draw(self, SCREEN):
         SCREEN.blit(self.image, (self.man_rect.x, self.man_rect.y))
@@ -94,22 +89,32 @@ class Obstacle():
 
 class SmallCactus(Obstacle):
     def __init__(self, image):
-        self.type = random.randint(0, 2)
+        self.type = random.randint(0, 5)
         super().__init__(image, self.type)
-        self.rect.y = 325
+        self.video_value = 2
+        if self.type == 0 or self.type == 1:
+            self.rect.y = 325
+        elif self.type == 2 or self.type == 3:
+            self.rect.y = 300
+        else:
+            self.rect.y = 335
+            self.video_value = 3
 
-    def video(self):
-        return 1
-        #return self.type
+    def identify(self):
+        return self.video_value
 
 
 class LargeCactus(Obstacle):
     def __init__(self, image):
-        self.type = random.randint(0, 2)
+        self.type = random.randint(0, 5)
         super().__init__(image, self.type)
-        self.rect.y = 300
+        if self.type == 3 or self.type == 4 or self.type == 5:
+            self.rect.y = 325
+        else:
+            self.rect.y = 300
+        #self.rect.y = 300
 
-    def video(self):
+    def identify(self):
         value = self.type + 3
         return 2
 
@@ -127,6 +132,45 @@ class Drone(Obstacle):
         SCREEN.blit(self.image[self.index//5], self.rect)
         self.index += 1
 
-    def video(self):
+    def identify(self):
         return 2
         #return 7
+
+
+class Shrine(Obstacle):
+    def __init__(self,image):
+        self.type = 0
+        super().__init__(image, self.type)
+        self.rect.y = 75
+
+    def identify(self):
+        return 9
+
+
+class Sovereign:
+    X_POS = 75
+    Y_POS = SCREEN_HEIGHT - 30
+    SPEED = 1
+    HP = 5
+    def __init__(self):
+        self.image = SOVEREIGN
+        self.sovereign_rect = self.image.get_rect()
+        self.sovereign_rect.x = self.X_POS
+        self.sovereign_rect.y = self.Y_POS
+
+    def movement(self, userInput):
+        if userInput[pygame.K_UP] and self.sovereign_rect.y - self.SPEED > 20:
+            self.sovereign_rect.y -= self.SPEED
+        if userInput[pygame.K_DOWN] and self.sovereign_rect.y + self.SPEED < SCREEN_HEIGHT - 30:
+            self.sovereign_rect.y += self.SPEED
+
+
+    def draw(self, SCREEN2):
+        SCREEN.blit(self.image, (self.sovereign_rect.x, self.sovereign_rect.y))
+
+
+class Eye:
+    X_POS = SCREEN_WIDTH - 50
+    Y_POS = 200
+    def __init__(self):
+        return

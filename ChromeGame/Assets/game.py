@@ -1,186 +1,16 @@
 import pygame
+import os
 import random
 import sys
 
-
 from Models import *
 from Videos import *
-from Variables import *
+from Init import *
 
 pygame.init()
 
-
-"""SCREEN_HEIGHT = 600
-SCREEN_WIDTH = 1100
-SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-
-
-RUNNING = pygame.image.load(os.path.join("Assets/man", "Untitled.png"))
-
-JUMPING = pygame.image.load(os.path.join("Assets/man", "Untitled.png"))
-
-DUCKING = pygame.image.load(os.path.join("Assets/man", "Untitled1.png"))
-
-SMALL_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus1.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus2.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "SmallCactus3.png"))]
-LARGE_CACTUS = [pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus1.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus2.png")),
-                pygame.image.load(os.path.join("Assets/Cactus", "LargeCactus3.png"))]
-
-DRONE = [pygame.image.load(os.path.join("Assets/drone", "Drone.png")),
-        pygame.image.load(os.path.join("Assets/drone", "DroneRed.png"))]
-
-BG = pygame.image.load(os.path.join("Assets/Other", "Track.png"))
-
-BIRDVID = cv2.VideoCapture("Assets/bird/videoplayback.mp4")
-CATVID = cv2.VideoCapture("Assets/cat/cat.mp4")"""
-
-"""class Man:
-    X_POS = 80
-    Y_POS = 310
-    Y_POS_DUCK = 340
-    JUMP_VEL = 8.5
-
-    def __init__(self):
-        self.duck_img = DUCKING
-        self.run_img = RUNNING
-        self.jump_img = JUMPING
-
-        self.man_duck = False
-        self.man_run = True
-        self.man_jump = False
-
-        self.step_index = 0
-        self.jump_vel = self.JUMP_VEL
-        self.image = self.run_img
-        self.man_rect = self.image.get_rect()
-        self.man_rect.x = self.X_POS
-        self.man_rect.y = self.Y_POS
-
-    def update(self, userInput):
-        if self.man_duck:
-            self.duck()
-        if self.man_run:
-            self.run()
-        if self.man_jump:
-            self.jump()
-
-        if self.step_index >= 10:
-            self.step_index = 0
-
-        if userInput[pygame.K_UP] and not self.man_jump:
-            self.man_duck = False
-            self.man_run = False
-            self.man_jump = True
-        elif userInput[pygame.K_DOWN] and not self.man_jump:
-            self.man_duck = True
-            self.man_run = False
-            self.man_jump = False
-        elif not (self.man_jump or userInput[pygame.K_DOWN]):
-            self.man_duck = False
-            self.man_run = True
-            self.man_jump = False
-
-    def duck(self):
-        self.image = self.duck_img
-        self.man_rect = self.image.get_rect()
-        self.man_rect.x = self.X_POS
-        self.man_rect.y = self.Y_POS_DUCK
-        self.step_index += 1
-
-    def run(self):
-        self.image = self.run_img
-        self.man_rect = self.image.get_rect()
-        self.man_rect.x = self.X_POS
-        self.man_rect.y = self.Y_POS
-        self.step_index += 1
-
-    def jump(self):
-        self.image = self.jump_img
-        if self.man_jump:
-            self.man_rect.y -= self.jump_vel * 4
-            self.jump_vel -= 0.8
-        if self.jump_vel < - self.JUMP_VEL:
-            self.man_jump = False
-            self.jump_vel = self.JUMP_VEL
-
-    def draw(self, SCREEN):
-        SCREEN.blit(self.image, (self.man_rect.x, self.man_rect.y))
-
-
-class Obstacle:
-    def __init__(self, image, type):
-        self.image = image
-        self.type = type
-        self.rect = self.image[self.type].get_rect()
-        self.rect.x = SCREEN_WIDTH
-
-    def update(self):
-        self.rect.x -= game_speed
-        if self.rect.x < -self.rect.width:
-            obstacles.pop()
-
-    def draw(self, SCREEN):
-        SCREEN.blit(self.image[self.type], self.rect)
-
-
-class SmallCactus(Obstacle):
-    def __init__(self, image):
-        self.type = random.randint(0, 2)
-        super().__init__(image, self.type)
-        self.rect.y = 325
-        
-
-
-class LargeCactus(Obstacle):
-    def __init__(self, image):
-        self.type = random.randint(0, 2)
-        super().__init__(image, self.type)
-        self.rect.y = 300
-
-
-class Drone(Obstacle):
-    def __init__(self, image):
-        self.type = 0
-        super().__init__(image, self.type)
-        self.rect.y = 250
-        self.index = 0
-
-    def draw(self, SCREEN):
-        if self.index >= 9:
-            self.index = 0
-        SCREEN.blit(self.image[self.index//5], self.rect)
-        self.index += 1
-
-
-def movie(num):
-    if num == 1:
-        while (BIRDVID.isOpened()):
-            ret, frame = BIRDVID.read()
-            if ret == True:
-                cv2.imshow('Frame', frame)
-                if cv2.waitKey(25) & 0xFF == ord('q'):
-                    break
-            else:
-                break
-        BIRDVID.release()
-    if num == 2:
-        while (CATVID.isOpened()):
-            ret, frame = CATVID.read()
-            if ret == True:
-                cv2.imshow('Frame', frame)
-                if cv2.waitKey(25) & 0xFF == ord('q'):
-                    break
-            else:
-                break
-        CATVID.release()
-    cv2.destroyAllWindows()
-
-"""
-
-
-def background():
+#Stage 1
+def background_1():
     global x_pos_bg, y_pos_bg
     image_width = BG.get_width()
     SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
@@ -196,15 +26,15 @@ def score():
     if points % 100 == 0:
         game_speed += 1
 
-    text = font.render("Points: " + str(points), True, (0, 0, 0))
+    text = font.render("Points: " + str(points), True, BLACK)
     textRect = text.get_rect()
     textRect.center = (1000, 40)
     SCREEN.blit(text, textRect)
 
 def FirstStage():
-    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, font
+    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, font, Age19
     run = True
-    clock = pygame.time.Clock()
+    #clock = pygame.time.Clock()
     player = Man()
     game_speed = 20
     x_pos_bg = 0
@@ -213,27 +43,7 @@ def FirstStage():
     obstacles = []
     death_count = 0
     font = pygame.font.Font('freesansbold.ttf', 20)
-
-    """def score():
-        global points, game_speed
-        points += 1
-        if points % 100 == 0:
-            game_speed += 1
-
-        text = font.render("Points: " + str(points), True, (0, 0, 0))
-        textRect = text.get_rect()
-        textRect.center = (1000, 40)
-        SCREEN.blit(text, textRect)
-
-    def background():
-        global x_pos_bg, y_pos_bg
-        image_width = BG.get_width()
-        SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
-        SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
-        if x_pos_bg <= -image_width:
-            SCREEN.blit(BG, (image_width + x_pos_bg, y_pos_bg))
-            x_pos_bg = 0
-        x_pos_bg -= game_speed"""
+    FPS1 = 30
 
     while run:
         for event in pygame.event.get():
@@ -242,50 +52,103 @@ def FirstStage():
                 pygame.quit()
                 sys.exit()
 
-        SCREEN.fill((255, 255, 255))
+        SCREEN.fill(WHITE)
         userInput = pygame.key.get_pressed()
 
-        background()
+        background_1()
 
         player.draw(SCREEN)
         player.update(userInput)
 
-        if len(obstacles) == 0:
-            if random.randint(0, 2) == 0:
-                obstacles.append(SmallCactus(SMALL_CACTUS))
-            elif random.randint(0, 2) == 1:
-                obstacles.append(LargeCactus(LARGE_CACTUS))
-            elif random.randint(0, 2) == 2:
-                obstacles.append(Drone(DRONE))
+        if Age19 and points < 30:               #to change 3000
+            if len(obstacles) == 0:
+                if random.randint(0, 2) == 0 or random.randint(0, 2) == 1:
+                    obstacles.append(LargeCactus(OBS_AGE_19))
+                elif random.randint(0, 2) == 2:
+                    obstacles.append(Drone(DRONE))
+        elif not Age19 and points < 30:               # t change 3000
+            if len(obstacles) == 0:
+                if random.randint(0, 2) == 0 or random.randint(0, 2) == 1:
+                    obstacles.append(SmallCactus(OBS_AGE_18))
+                elif random.randint(0, 2) == 2:
+                    obstacles.append(Drone(DRONE))
+        elif points > 30:                                # to change 3000
+            if len(obstacles) == 0:
+                obstacles.append(Shrine(SHRINE))
 
         for obstacle in obstacles:
             obstacle.draw(SCREEN)
             obstacle.update(game_speed,obstacles)
-            if player.man_rect.colliderect(obstacle.rect):
+            if player.man_rect.colliderect(obstacle.rect) and obstacle.identify() == 9:
+                SecondStage()
+            elif player.man_rect.colliderect(obstacle.rect):
                 pygame.time.delay(2000)
-                movie(obstacle.video())
+                movie(obstacle.identify())
                 death_count += 1
                 menu(death_count)
 
         score()
 
+        clock.tick(FPS1)
+        pygame.display.update()
 
-        clock.tick(30)
+#Stage 2
+def background2(player):
+    global font_health
+    SCREEN2.blit(BG2, (0, 0))
+    Sovereign_HP = font_health.render("Health: " + str(player.HP), 1, WHITE)
+    #Eye_HP = font_health.render("Health: " + str(enemy.HP), 1, BLACK)
+    SCREEN2.blit(Sovereign_HP, (10, 10))
+    #SCREEN2.blit(Eye_HP, (SCREEN_WIDTH - Eye_HP.get_width() - 10, 10))
+    return
+
+def SecondStage():
+    global font_health, SCREEN2
+    x_pos_bg = 0
+    y_pos_bg = 380
+    FPS2 = 60
+    player = Sovereign()
+    font_health = pygame.font.Font('freesansbold.ttf', 20)
+    SCREEN2 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT + 100))
+
+    while (1):
+        SCREEN2.fill(WHITE)
+        background2(player)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        userInput = pygame.key.get_pressed()
+
+        player.draw(SCREEN2)
+        player.movement(userInput)
+        """font = pygame.font.Font('freesansbold.ttf', 30)
+        text = font.render("Game Clear", True, BLACK)
+        textRect = text.get_rect()
+        textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        SCREEN.blit(text, textRect)
+        pygame.display.update()"""
+
+
         pygame.display.update()
 
 
+
+
+#Start Menu
 def menu(death_count):
     global points
     run = True
     while run:
-        SCREEN.fill((255, 255, 255))
+        SCREEN.fill(WHITE)
         font_menu = pygame.font.Font('freesansbold.ttf', 30)
 
         if death_count == 0:
-            text = font_menu.render("Press any Key to Start: Reach 500 for Bird", True, (0, 0, 0))
+            text = font_menu.render("Press any Key to Start: Reach 500 for Bird", True, (BLACK))
         elif death_count > 0:
-            text = font_menu.render("Press any Key to Restart", True, (0, 0, 0))
-            score = font_menu.render("Your Score: " + str(points), True, (0, 0, 0))
+            text = font_menu.render("Press any Key to Restart", True, BLACK)
+            score = font_menu.render("Your Score: " + str(points), True, BLACK)
             scoreRect = score.get_rect()
             scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
             SCREEN.blit(score, scoreRect)
@@ -302,5 +165,30 @@ def menu(death_count):
             if event.type == pygame.KEYDOWN:
                 FirstStage()
 
+def start_age():
+    global Age19
+    while(1):
+        SCREEN.fill(WHITE)
+        font = pygame.font.Font('freesansbold.ttf', 30)
+        text = font.render("Up Key for 18+, Down Key for <18", True, BLACK)
+        textRect = text.get_rect()
+        textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        SCREEN.blit(text, textRect)
+        pygame.display.update()
+        userInput = pygame.key.get_pressed()
 
-menu(death_count=0)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif userInput[pygame.K_UP]:
+                Age19 = True
+                menu(death_count=0)
+            elif userInput[pygame.K_DOWN]:
+                Age19 = False
+                menu(death_count=0)
+
+start_age()
+
+# use pygame.transform.fns to change img dimentions and rotate if necessary
+#step_index
