@@ -207,7 +207,7 @@ class Sovereign:
 class Eye:
     X_POS = SCREEN_WIDTH - EYE_WIDTH
     Y_POS = (SCREEN_HEIGHT // 2) - (EYE_HEIGHT // 2)
-    HP = 25
+    HP = 1           #to change 25
     COUNT = 0
     START_ATTACK = False
     RAGE = False
@@ -222,14 +222,16 @@ class Eye:
         self.weak_spot_rect.x = self.X_POS
         self.weak_spot_rect.y = self.Y_POS + (EYE_HEIGHT // 2) - 20
 
-    def draw(self, SCREEN2):
-        SCREEN2.blit(self.weak_spot_img, (self.weak_spot_rect.x, self.weak_spot_rect.y))
-        SCREEN2.blit(self.image, (self.eye_rect.x, self.eye_rect.y))
-
     def start_attack(self):
         self.COUNT += 1
         if self.COUNT == 50:
             self.START_ATTACK = True
+
+    def draw(self, SCREEN2):
+        SCREEN2.blit(self.weak_spot_img, (self.weak_spot_rect.x, self.weak_spot_rect.y))
+        SCREEN2.blit(self.image, (self.eye_rect.x, self.eye_rect.y))
+
+
 
 class Attack1:
     SPEED = 7
@@ -283,3 +285,43 @@ class Attack2:
 
     def draw(self,SCREEN2):
         SCREEN2.blit(self.image, (self.attack_rect.x, self.attack_rect.y))
+
+class Champion:
+    X_POS = 100
+    Y_POS = 150
+    HP = 5
+    TASK1 = []
+    TASK2 = -1
+    TASK_NUM = 1
+    def __init__(self):
+        self.image = CHAMPION
+        self.champ_rect = self.image.get_rect()
+        self.champ_rect.x = self.X_POS
+        self.champ_rect.y = self.Y_POS
+
+    def draw(self, SCREEN3):
+        SCREEN3.blit(self.image, (self.champ_rect.x, self.champ_rect.y))
+
+
+class Demon:
+    X_POS = 770
+    Y_POS = 200
+    HP = 10
+    TASK1 = []
+    TASK2 = -1
+    TASK_NUM = 1
+    def __init__(self):
+        self.image = DEVIL
+        self.demon_rect = self.image.get_rect()
+        self.demon_rect.x = self.X_POS
+        self.demon_rect.y = self.Y_POS
+        self.task1_img = DARKNESS
+        self.task1_rect = self.task1_img.get_rect()
+        self.task1_rect.x = SCREEN_WIDTH // 2
+        self.task1_rect.y = SCREEN_HEIGHT - 100
+
+    def task1(self):
+        SCREEN.blit(self.task1_img, (self.task1_rect.x, self.task1_rect.y))
+
+    def draw(self, SCREEN3):
+        SCREEN3.blit(self.image, (self.demon_rect.x, self.demon_rect.y))

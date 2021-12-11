@@ -13,6 +13,7 @@ EYE_DIM = (EYE_WIDTH, EYE_HEIGHT)
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 YELlOW = (255, 255, 0)
+RED = (255,0,0)
 
 RUNNING = pygame.image.load(os.path.join("Assets/man", "Untitled.png"))
 
@@ -58,5 +59,13 @@ ATTACK1 = pygame.image.load(os.path.join("Assets/Enemy", "Attack.png"))
 ATTACK2 = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Enemy", "Attack.png")), (SCREEN_WIDTH - 200, 300))
 
 BG2 = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Other", "BG3.jfif")), (SCREEN_WIDTH, SCREEN_HEIGHT + 100))
+
+CHAMPION = pygame.image.load(os.path.join("Assets/man", "Champion_.png"))
+
+DEVIL = pygame.image.load(os.path.join("Assets/man", "Devil_.png"))
+
+DARKNESS = pygame.image.load(os.path.join("Assets/Enemy", "Darkness.png"))
+
+BG3 = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Other", "vs2.jpg")), (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 clock = pygame.time.Clock()
