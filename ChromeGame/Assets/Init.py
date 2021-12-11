@@ -6,6 +6,10 @@ SCREEN_HEIGHT = 700
 SCREEN_WIDTH = 1100
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
+EYE_HEIGHT = 200
+EYE_WIDTH = 125
+EYE_DIM = (EYE_WIDTH, EYE_HEIGHT)
+
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 YELlOW = (255, 255, 0)
@@ -41,7 +45,17 @@ SHRINE = [pygame.image.load(os.path.join("Assets/Other", "Shrine.png"))]
 
 SOVEREIGN = pygame.image.load(os.path.join("Assets/man", "Untitled2.png"))
 
-#EYE = pygame.image.load(os.path.join("Assets/Enemy", somn.png))
+BULLET = pygame.transform.rotate(pygame.image.load(os.path.join("Assets/man", "rhitta.png")), -45)
+BULLET = pygame.transform.scale(BULLET, (120, 70))
+
+EYE = pygame.image.load(os.path.join("Assets/Enemy", "Eye.png"))
+EYE = pygame.transform.scale(EYE, EYE_DIM)
+
+WEAKNESS = pygame.image.load(os.path.join("Assets/Enemy", "Weak.png"))
+
+ATTACK1 = pygame.image.load(os.path.join("Assets/Enemy", "Attack.png"))
+
+ATTACK2 = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Enemy", "Attack.png")), (SCREEN_WIDTH - 200, 300))
 
 BG2 = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Other", "BG3.jfif")), (SCREEN_WIDTH, SCREEN_HEIGHT + 100))
 

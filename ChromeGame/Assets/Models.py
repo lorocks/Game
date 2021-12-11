@@ -150,27 +150,136 @@ class Shrine(Obstacle):
 class Sovereign:
     X_POS = 75
     Y_POS = SCREEN_HEIGHT - 30
-    SPEED = 1
+    SPEED = 8
     HP = 5
+    READY_SHOOT = True
+    BULLET_SPEED = 10
+    COUNT = 0
+    SHOOT = False
     def __init__(self):
         self.image = SOVEREIGN
         self.sovereign_rect = self.image.get_rect()
         self.sovereign_rect.x = self.X_POS
         self.sovereign_rect.y = self.Y_POS
+        self.bullet_img = BULLET
+        self.bullet_rect = self.bullet_img.get_rect()
+        self.bullet_rect.x = self.sovereign_rect.x + 40
+        self.bullet_rect.y = self.sovereign_rect.y + 50
 
     def movement(self, userInput):
-        if userInput[pygame.K_UP] and self.sovereign_rect.y - self.SPEED > 20:
-            self.sovereign_rect.y -= self.SPEED
-        if userInput[pygame.K_DOWN] and self.sovereign_rect.y + self.SPEED < SCREEN_HEIGHT - 30:
-            self.sovereign_rect.y += self.SPEED
+        if not self.SHOOT:
+            if userInput[pygame.K_UP] and self.sovereign_rect.y - self.SPEED > 20:
+                self.sovereign_rect.y -= self.SPEED
+                self.bullet_rect.y -= self.SPEED
+            if userInput[pygame.K_DOWN] and self.sovereign_rect.y + self.SPEED < SCREEN_HEIGHT - 30:
+                self.sovereign_rect.y += self.SPEED
+                self.bullet_rect.y += self.SPEED
+        else:
+            if userInput[pygame.K_UP] and self.sovereign_rect.y - self.SPEED > 20:
+                self.sovereign_rect.y -= self.SPEED
+            if userInput[pygame.K_DOWN] and self.sovereign_rect.y + self.SPEED < SCREEN_HEIGHT - 30:
+                self.sovereign_rect.y += self.SPEED
 
+    def shoot(self):
+        if self.READY_SHOOT:
+            self.SHOOT = True
+
+    def shooting(self):
+        if self.bullet_rect.x > SCREEN_WIDTH:
+            self.bullet_rect.x = self.sovereign_rect.x + 40
+            self.bullet_rect.y = self.sovereign_rect.y + 50
+            self.READY_SHOOT = False
+            self.SHOOT = False
+        if self.COUNT == 200:
+            self.READY_SHOOT = True
+            self.COUNT = 0
+        if not self.READY_SHOOT:
+            self.COUNT += 1
+        if self.SHOOT:
+            self.bullet_rect.x += self.BULLET_SPEED
 
     def draw(self, SCREEN2):
-        SCREEN.blit(self.image, (self.sovereign_rect.x, self.sovereign_rect.y))
-
+        SCREEN2.blit(self.image, (self.sovereign_rect.x, self.sovereign_rect.y))
+        if self.READY_SHOOT:
+            SCREEN2.blit(self.bullet_img, (self.bullet_rect.x, self.bullet_rect.y))
+        self.shooting()
 
 class Eye:
-    X_POS = SCREEN_WIDTH - 50
-    Y_POS = 200
+    X_POS = SCREEN_WIDTH - EYE_WIDTH
+    Y_POS = (SCREEN_HEIGHT // 2) - (EYE_HEIGHT // 2)
+    HP = 25
+    COUNT = 0
+    START_ATTACK = False
+    RAGE = False
+    RAGE_TIME = 0
     def __init__(self):
-        return
+        self.image = EYE
+        self.eye_rect = self.image.get_rect()
+        self.eye_rect.x = self.X_POS
+        self.eye_rect.y = self.Y_POS
+        self.weak_spot_img = WEAKNESS
+        self.weak_spot_rect = self.weak_spot_img.get_rect()
+        self.weak_spot_rect.x = self.X_POS
+        self.weak_spot_rect.y = self.Y_POS + (EYE_HEIGHT // 2) - 20
+
+    def draw(self, SCREEN2):
+        SCREEN2.blit(self.weak_spot_img, (self.weak_spot_rect.x, self.weak_spot_rect.y))
+        SCREEN2.blit(self.image, (self.eye_rect.x, self.eye_rect.y))
+
+    def start_attack(self):
+        self.COUNT += 1
+        if self.COUNT == 50:
+            self.START_ATTACK = True
+
+class Attack1:
+    SPEED = 7
+    def __init__(self,image,num):
+        self.image = image
+        self.part1 = self.image.get_rect()
+        self.part2 = self.image.get_rect()
+        self.part3 = self.image.get_rect()
+        self.part1.x = 800
+        self.part2.x = 800
+        self.part3.x = 800
+        if num == 0:
+            self.part1.y = 100
+            self.part2.y = SCREEN_HEIGHT // 2
+            self.part3.y = SCREEN_HEIGHT - 100
+        if num == 1:
+            self.part1.y = 100
+            self.part2.y = 200
+            self.part3.y = 300
+        if num == 2:
+            self.part1.y = 450
+            self.part2.y = 550
+            self.part3.y = 650
+
+    def update(self, enemy_attacks):
+        self.part1.x -= self.SPEED
+        self.part2.x -= self.SPEED
+        self.part3.x -= self.SPEED
+        if self.part1.x < 0:
+            enemy_attacks.pop()
+
+    def draw(self,SCREEN2):
+        SCREEN2.blit(self.image, (self.part1.x, self.part1.y))
+        SCREEN2.blit(self.image, (self.part2.x, self.part2.y))
+        SCREEN2.blit(self.image, (self.part3.x, self.part3.y))
+
+
+class Attack2:
+    TIMER = 0
+    def __init__(self, image):
+        self.image = image
+        self.attack_rect = self.image.get_rect()
+        self.attack_rect.x = 0
+        self.attack_rect.y = 200
+
+    def update(self, enemy_attacks, enemy):
+        self.TIMER += 1
+        if self.TIMER == 40:
+            enemy_attacks.pop()
+            enemy.RAGE = False
+
+    def draw(self,SCREEN2):
+        SCREEN2.blit(self.image, (self.attack_rect.x, self.attack_rect.y))
