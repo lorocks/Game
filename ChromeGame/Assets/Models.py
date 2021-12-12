@@ -309,7 +309,8 @@ class Demon:
     HP = 10
     TASK1 = []
     TASK2 = -1
-    TASK_NUM = 1
+    TASK_NUM = 0
+    TASK1_MAX_CNT = 5
     def __init__(self):
         self.image = DEVIL
         self.demon_rect = self.image.get_rect()
@@ -317,10 +318,10 @@ class Demon:
         self.demon_rect.y = self.Y_POS
         self.task1_img = DARKNESS
         self.task1_rect = self.task1_img.get_rect()
-        self.task1_rect.x = SCREEN_WIDTH // 2
-        self.task1_rect.y = SCREEN_HEIGHT - 100
+        self.task1_rect.x = SCREEN_WIDTH // 4 - 100
+        self.task1_rect.y = SCREEN_HEIGHT - 200
 
-    def task1(self):
+    def task1(self, screen_type):
         SCREEN.blit(self.task1_img, (self.task1_rect.x, self.task1_rect.y))
 
     def draw(self, SCREEN3):

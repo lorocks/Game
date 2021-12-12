@@ -189,20 +189,43 @@ def background3(player, enemy):
     SCREEN3.blit(Demon_HP, (SCREEN_WIDTH - Demon_HP.get_width() - 10, 10))
 
 def ThirdStage(hp):
-    global SCREEN3, font_health
+    global SCREEN3, font_health, FPS2
     font_health = font_health = pygame.font.Font('freesansbold.ttf', 20)           # remove line after integration
     SCREEN3 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     player = Champion()
     enemy = Demon()
     player.HP = hp
+    FPS2 = 60
     enemy_count = 0
     player_count = 0
+    elapsed_time2 = 0
+    elapsed_time1 = 0
+    imageShow = False
+    imageOn = False
+    startTasks = False
+    currentFrameCount = 0
+    count = 0
+
+    def pause():
+        pause = True
+        elapsed_time = 0
+        while pause:
+            if elapsed_time > 500:
+                pause = False
+            elapsed_time += clock.tick(60)
+
     while 1:
         background3(player, enemy)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                enemy.TASK_NUM = 1
+            """if event.type == pygame .KEYDOWN and event.key == pygame.K_SPACE and enemy.TASK_NUM == 1:
+                imageShow = True
+                elapsed_time1 = 0
+                startTasks = True"""
 
         player.draw(SCREEN3)
         enemy.draw(SCREEN3)
@@ -212,15 +235,56 @@ def ThirdStage(hp):
         if enemy.TASK2 == -1:
             enemy.TASK2 = random.randint(0,1)
 
-        if player.TASK_NUM == 1:
-            for task in enemy.TASK1:
-                pygame.time.delay(500)
-                enemy.task1()
-                pygame.time.delay(500)          #stopped here implement count and model change
-            player.TASK_NUM += 1
+        if elapsed_time1 > 500:
+            imageShow = True
+            #imageOn = True
+            elapsed_time1 = 0
 
+        """if elapsed_time2 > 1000:
+            imageOn = not imageOn
+            elapsed_time2 = 0"""
 
+        #if imageOn:
+         #   enemy.task1(0)
+
+        if player.TASK_NUM == 1 and enemy.TASK_NUM == 1:
+            """if imageShow or elapsed_time1 < 500:
+                enemy.task1(enemy.TASK1[enemy_count])
+                if enemy_count == enemy.TASK1_MAX_CNT:
+                    enemy.TASK_NUM += 1"""
+            """if imageShow:
+                if imageOn:
+                    enemy.task1(enemy.TASK1[enemy_count])
+                if not imageOn:
+                    enemy_count += 1
+                    print(enemy_count)
+                imageShow = False
+                if enemy_count == enemy.TASK1_MAX_CNT:
+                    enemy.TASK_NUM += 1"""
+            if imageShow:
+                enemy.task1(enemy.TASK1[enemy_count])
+                currentFrameCount = count
+                enemy_count += 1
+                #print(enemy_count)
+                imageShow = False
+
+        """if elapsed_time1 > 500:
+            imageShow = False
+            elapsed_time1 = 0
+
+        if not imageShow and startTasks:
+            print(enemy_count)
+            enemy_count += 1"""
+
+        elapsed_time1 += clock.tick(FPS2)
+        elapsed_time2 += clock.tick(FPS2)
+        count += 1
+        clock.tick(FPS2)
         pygame.display.update()
+        if currentFrameCount == count - 1 and enemy.TASK_NUM == 1:
+            pause()
+            if enemy_count == enemy.TASK1_MAX_CNT:
+                enemy.TASK_NUM += 1
 
 #Start Menu
 def menu(menu_count, val):

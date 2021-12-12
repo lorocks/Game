@@ -64,7 +64,7 @@ CHAMPION = pygame.image.load(os.path.join("Assets/man", "Champion_.png"))
 
 DEVIL = pygame.image.load(os.path.join("Assets/man", "Devil_.png"))
 
-DARKNESS = pygame.image.load(os.path.join("Assets/Enemy", "Darkness.png"))
+DARKNESS = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Enemy", "Darkness_.png")), (175,125))
 
 BG3 = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Other", "vs2.jpg")), (SCREEN_WIDTH, SCREEN_HEIGHT))
 
