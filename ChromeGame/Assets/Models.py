@@ -207,11 +207,11 @@ class Sovereign:
 class Eye:
     X_POS = SCREEN_WIDTH - EYE_WIDTH
     Y_POS = (SCREEN_HEIGHT // 2) - (EYE_HEIGHT // 2)
-    HP = 1           #to change 25
+    HP = 3           #to change 25
     COUNT = 0
     START_ATTACK = False
     RAGE = False
-    RAGE_TIME = 0
+    RAGE_TIME = 1       # to change 0
     def __init__(self):
         self.image = EYE
         self.eye_rect = self.image.get_rect()
@@ -317,12 +317,23 @@ class Demon:
         self.demon_rect.x = self.X_POS
         self.demon_rect.y = self.Y_POS
         self.task1_img = DARKNESS
-        self.task1_rect = self.task1_img.get_rect()
-        self.task1_rect.x = SCREEN_WIDTH // 4 - 100
-        self.task1_rect.y = SCREEN_HEIGHT - 200
+        self.task1_rect1 = self.task1_img.get_rect()
+        self.task1_rect2 = self.task1_img.get_rect()
+        self.task1_rect3 = self.task1_img.get_rect()
+        self.task1_rect1.x = SCREEN_WIDTH // 4 - 100
+        self.task1_rect2.x = SCREEN_WIDTH // 2 - 100
+        self.task1_rect3.x = SCREEN_WIDTH*3 / 4 - 100
+        self.task1_rect1.y = SCREEN_HEIGHT - 200
+        self.task1_rect2.y = SCREEN_HEIGHT - 200
+        self.task1_rect3.y = SCREEN_HEIGHT - 200
 
     def task1(self, screen_type):
-        SCREEN.blit(self.task1_img, (self.task1_rect.x, self.task1_rect.y))
+        if screen_type == 0:
+            SCREEN.blit(self.task1_img, (self.task1_rect1.x, self.task1_rect1.y))
+        elif screen_type == 1:
+            SCREEN.blit(self.task1_img, (self.task1_rect2.x, self.task1_rect2.y))
+        elif screen_type == 2:
+            SCREEN.blit(self.task1_img, (self.task1_rect3.x, self.task1_rect3.y))
 
     def draw(self, SCREEN3):
         SCREEN3.blit(self.image, (self.demon_rect.x, self.demon_rect.y))

@@ -33,19 +33,19 @@ def score():
 
 def add_obstacles():
     global Age19, obstacles, points
-    if Age19 and points < 30:  # to change 3000
+    if Age19 and points < 300:  # to change 3000
         if len(obstacles) == 0:
             if random.randint(0, 2) == 0 or random.randint(0, 2) == 1:
                 obstacles.append(LargeCactus(OBS_AGE_19))
             elif random.randint(0, 2) == 2:
                 obstacles.append(Drone(DRONE))
-    elif not Age19 and points < 30:  # t change 3000
+    elif not Age19 and points < 300:  # t change 3000
         if len(obstacles) == 0:
             if random.randint(0, 2) == 0 or random.randint(0, 2) == 1:
                 obstacles.append(SmallCactus(OBS_AGE_18))
             elif random.randint(0, 2) == 2:
                 obstacles.append(Drone(DRONE))
-    elif points > 30:  # to change 3000
+    elif points > 300:  # to change 3000
         if len(obstacles) == 0:
             obstacles.append(Shrine(SHRINE))
 
@@ -190,7 +190,7 @@ def background3(player, enemy):
 
 def ThirdStage(hp):
     global SCREEN3, font_health, FPS2
-    font_health = font_health = pygame.font.Font('freesansbold.ttf', 20)           # remove line after integration
+    font_health = pygame.font.Font('freesansbold.ttf', 20)           # remove line after integration
     SCREEN3 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     player = Champion()
     enemy = Demon()
@@ -205,6 +205,7 @@ def ThirdStage(hp):
     startTasks = False
     currentFrameCount = 0
     count = 0
+    task1_failed = False
 
     def pause():
         pause = True
@@ -263,10 +264,22 @@ def ThirdStage(hp):
                     enemy.TASK_NUM += 1"""
             if imageShow:
                 enemy.task1(enemy.TASK1[enemy_count])
+                print(enemy.TASK1)
                 currentFrameCount = count
                 enemy_count += 1
                 #print(enemy_count)
                 imageShow = False
+        elif player.TASK_NUM == 1:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN and event.key == pygame.SPACE:
+                    player.TASK1.append(0)
+                    player_count += 1
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_DOWN:
+                    player.TASK1.append(1)
+                    player_count += 1
+                if event.type == pygame.KEYDOWN and event.key == pygame.SPACE:
+                    player.TASK1.append(2)
+                    player_count += 1
 
         """if elapsed_time1 > 500:
             imageShow = False
@@ -275,6 +288,11 @@ def ThirdStage(hp):
         if not imageShow and startTasks:
             print(enemy_count)
             enemy_count += 1"""
+
+        if player.TASK1 == enemy.TASK1:
+            enemy.HP -= 1
+            task1_failed = True
+
 
         elapsed_time1 += clock.tick(FPS2)
         elapsed_time2 += clock.tick(FPS2)
@@ -285,6 +303,10 @@ def ThirdStage(hp):
             pause()
             if enemy_count == enemy.TASK1_MAX_CNT:
                 enemy.TASK_NUM += 1
+                enemy_count = 0
+        if player_count == enemy.TASK1_MAX_CNT:
+            player.TASK_NUM += 1
+            player_count = 0
 
 #Start Menu
 def menu(menu_count, val):
@@ -356,7 +378,7 @@ def start_age():
                 Age19 = False
                 menu(menu_count=0, val=0)
 
-#start_age()
-ThirdStage(5)
+start_age()
+#ThirdStage(5)
 # use pygame.transform.fns to change img dimensions and rotate if necessary
 #step_index
