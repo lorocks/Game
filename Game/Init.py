@@ -12,7 +12,7 @@ EYE_DIM = (EYE_WIDTH, EYE_HEIGHT)
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-YELlOW = (255, 255, 0)
+YELLOW = (255, 255, 0)
 RED = (255,0,0)
 
 RUNNING = pygame.image.load(os.path.join("Assets/man", "Untitled.png"))
