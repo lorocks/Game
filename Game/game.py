@@ -1,16 +1,94 @@
-import pygame
-import random
 import sys
 import numpy
+import pygame.mixer
 
 from Models import *
 from Videos import *
 from Init import *
 
 pygame.init()
+#pygame.mixer.init()
+#pygame.mixer.music.load("Assets/Video/test.mp3")   use the method used in dino game git
+
+#Stage 0
+def Background1(player):
+    global font_health
+    font_health = pygame.font.Font('freesansbold.ttf', 20)
+    powerLvl = font_health.render("Power Level: " + str(player.POWER_LVL), 1, BLACK)
+    SCREEN.blit(powerLvl, (10, 10))
+    blockSize = 100
+    for x in range(100, SCREEN_WIDTH - 100, blockSize):
+        for y in range(100, SCREEN_HEIGHT - 100, blockSize):
+            rect = pygame.Rect(x, y, blockSize, blockSize)
+            pygame.draw.rect(SCREEN, BLACK, rect, 1)
+
+def get_map(field, player):
+    global totalPower
+    totalPower = 0
+    for i in range(5):
+        for j in range(9):
+            if not field.SPAWN_SITE[i][j] == -1:
+                spawn = Spawn(field.SPAWN_SITE[i][j], j, i)
+                spawn.populate(SCREEN)
+                totalPower += spawn.power
+                if player.rect.colliderect(spawn.rect):
+                    if player.POWER_LVL > spawn.power:
+                        player.POWER_LVL += spawn.power
+                    elif player.POWER_LVL == spawn.power:
+                        player.POWER_LVL += 2
+                    elif player.POWER_LVL + 2 >= spawn.power:
+                        player.POWER_LVL -= 1
+                    else:
+                        movie(13, Age19)
+                        menu(8, 0)
+                    field.SPAWN_SITE[i][j] = -1
+
+def isDoable():
+    if totalPower < 600:
+        FirstStage()
+
+def FirstStage():
+    doableCheck = False
+    player = Weakling()
+    field = Map()
+    enemy = Boss()
+    while 1:
+        SCREEN.fill(WHITE)
+        Background1(player)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    if player.rect.x > 105:
+                        player.rect.x -= 100
+                if event.key == pygame.K_UP:
+                    if player.rect.x < 905:
+                        player.rect.x += 100
+                if event.key == pygame.K_DOWN:
+                    if player.rect.y < 505:
+                        player.rect.y += 100
+
+        get_map(field, player)
+        if not doableCheck:
+            isDoable()
+            doableCheck = True
+
+        if player.rect.colliderect(enemy.boss_rect):
+            if player.POWER_LVL >= enemy.POWER_LVL:
+                movie(12, Age19)
+                menu(2,0)
+            else:
+                movie(11, Age19)
+                menu(8,0)
+
+        player.draw(SCREEN)
+        enemy.draw(SCREEN)
+        pygame.display.update()
 
 #Stage 1
-def background_1():
+def Background2():
     global x_pos_bg, y_pos_bg
     image_width = BG.get_width()
     SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
@@ -33,23 +111,23 @@ def score():
 
 def add_obstacles():
     global Age19, obstacles, points
-    if Age19 and points < 300:  # to change 3000
+    if Age19 and points < 30:  # to change 2500 30 test
         if len(obstacles) == 0:
             if random.randint(0, 2) == 0 or random.randint(0, 2) == 1:
                 obstacles.append(LargeCactus(OBS_AGE_19))
             elif random.randint(0, 2) == 2:
                 obstacles.append(Drone(DRONE))
-    elif not Age19 and points < 300:  # t change 3000
+    elif not Age19 and points < 30:  # t change 2500
         if len(obstacles) == 0:
             if random.randint(0, 2) == 0 or random.randint(0, 2) == 1:
                 obstacles.append(SmallCactus(OBS_AGE_18))
             elif random.randint(0, 2) == 2:
                 obstacles.append(Drone(DRONE))
-    elif points > 300:  # to change 3000
+    elif points > 30:  # to change 2500
         if len(obstacles) == 0:
             obstacles.append(Shrine(SHRINE))
 
-def FirstStage():
+def SecondStage():
     global game_speed, x_pos_bg, y_pos_bg, points, obstacles, font, Age19
     #clock = pygame.time.Clock()
     player = Man()
@@ -70,7 +148,7 @@ def FirstStage():
         SCREEN.fill(WHITE)
         userInput = pygame.key.get_pressed()
 
-        background_1()
+        Background2()
 
         player.draw(SCREEN)
         player.update(userInput)
@@ -80,10 +158,12 @@ def FirstStage():
             obstacle.draw(SCREEN)
             obstacle.update(game_speed,obstacles)
             if player.man_rect.colliderect(obstacle.rect) and obstacle.identify() == 9:
-                menu(2, 0)
+                pygame.time.delay(1000)
+                movie(obstacle.identify(), Age19)
+                menu(7, 0)
             elif player.man_rect.colliderect(obstacle.rect):
-                pygame.time.delay(2000)
-                movie(obstacle.identify())
+                pygame.time.delay(1000)
+                movie(obstacle.identify(), Age19)
                 menu(1, points)
 
         score()
@@ -92,7 +172,7 @@ def FirstStage():
         pygame.display.update()
 
 #Stage 2
-def background2(player, enemy):
+def Background3(player, enemy):
     global font_health
     SCREEN2.blit(BG2, (0, 0))
     if player.HP < 3:
@@ -108,17 +188,16 @@ def background2(player, enemy):
     SCREEN2.blit(Sovereign_HP, (10, 10))
     SCREEN2.blit(Eye_HP, (SCREEN_WIDTH - Eye_HP.get_width() - 10, 10))
 
-def SecondStage():
+def ThirdStage():
     global font_health, SCREEN2
     FPS2 = 60
     enemy_attacks = []
     player = Sovereign()
     enemy = Eye()
-    font_health = pygame.font.Font('freesansbold.ttf', 20)
     SCREEN2 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT + 100))
 
     while 1:
-        background2(player, enemy)
+        Background3(player, enemy)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -167,18 +246,21 @@ def SecondStage():
                     enemy_attacks.pop()
 
         if player.HP == 0:
-            pygame.time.delay(2000)
-            menu(3, enemy.HP)
+            pygame.time.delay(1000)
+            menu(3, enemy.HP) # die to eye
         if enemy.HP == 0:
+            movie(15, Age19)
             menu(4, player.HP)
-
         clock.tick(FPS2)
         pygame.display.update()
 
 #Stage 3
-def background3(player, enemy):
+def Background4(player, enemy):
     global font_health
-    SCREEN3.blit(BG3, (0, 0))
+    if enemy.HP < 3:
+        SCREEN3.blit(BG3SWITCH, (0, 0))
+    else:
+        SCREEN3.blit(BG3, (0, 0))
     if player.HP < 3:
         Champion_HP = font_health.render("Health: " + str(player.HP), 1, RED)
     else:
@@ -192,7 +274,7 @@ def background3(player, enemy):
     SCREEN3.blit(Champion_HP, (10, 10))
     SCREEN3.blit(Demon_HP, (SCREEN_WIDTH - Demon_HP.get_width() - 10, 10))
 
-def ThirdStage(hp):
+def FourthStage(hp):
     global SCREEN3, font_health, FPS2, player_count
     font_health = pygame.font.Font('freesansbold.ttf', 20)           # remove line after integration
     SCREEN3 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -207,6 +289,8 @@ def ThirdStage(hp):
     imageShow = False
     currentFrameCount = 0
     frameCount = 0
+    vidShow1 = True
+    vidShow2 = True
 
     def pause():
         pause = True
@@ -218,7 +302,6 @@ def ThirdStage(hp):
 
     def get_task1():
         global player_count
-        print("we in")
         while player_count<enemy.TASK1_MAX_CNT:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -234,7 +317,6 @@ def ThirdStage(hp):
                     player_count += 1
 
     def get_task2():
-        print("we in 2")
         input = True
         while input:
             for event in pygame.event.get():
@@ -248,7 +330,7 @@ def ThirdStage(hp):
                         player.TASK2 = 0
                     input = False
     while 1:
-        background3(player, enemy)
+        Background4(player, enemy)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -259,7 +341,7 @@ def ThirdStage(hp):
         player.draw(SCREEN3)
         enemy.draw(SCREEN3)
 
-        if enemy.HP == 2 and not enemy.HARD:
+        if enemy.HP < 3 and not enemy.HARD:
             enemy.HARD = True
             enemy.TASK1_MAX_CNT = 7
 
@@ -282,19 +364,23 @@ def ThirdStage(hp):
             print(enemy.TASK1)
             get_task1()
             player.TASK_NUM += 1
-            print(player.TASK1)
-            print("we out")
         if player.TASK_NUM == 2:
             print(enemy.TASK2)
             get_task2()
             player.TASK_NUM += 1
-            print("we out 2")
-            print(player.TASK2)
         if player.TASK_NUM == 3:
             if (numpy.array(player.TASK1) == numpy.array(enemy.TASK1)).all() and player.TASK2 == enemy.TASK2:
                 enemy.HP -= 1
+                vidShow1 = True
             elif not (numpy.array(player.TASK1) == numpy.array(enemy.TASK1)).all() and not player.TASK2 == enemy.TASK2:
                 player.HP -= 1
+                player.TASK1_FAIL += 1
+                vidShow2 = True
+            elif not (numpy.array(player.TASK1) == numpy.array(enemy.TASK1)).all():
+                player.TASK1_FAIL += 1
+                if player.TASK1_FAIL > 3 == 1:
+                    player.HP -= 1
+                    player.TASK1_FAIL = 0
             player.TASK_NUM = 0
             player_count = 0
             enemy_count = 0
@@ -303,11 +389,27 @@ def ThirdStage(hp):
             player.TASK2 = -1
             enemy.TASK2 = -1
 
+
+        if (enemy.HP == 5 or enemy.HP == 2) and vidShow1:
+            if enemy.HP == 5:
+                movie(17, Age19)
+            if enemy.HP == 2:
+                movie(18, Age19)
+            vidShow1 = False
+        if (player.HP == 3 or player.HP == 1) and vidShow2:
+            if player.HP == 3:
+                movie(20, Age19)
+            if player.HP == 1:
+                movie(21, Age19)
+            vidShow2 = False
+
         if player.HP == 0:
-            pygame.time.delay(2000)
-            menu(5, enemy.HP)
+            pygame.time.delay(1000)
+            movie(22, Age19)
+            menu(5, enemy.HP) #die to estarossa
         if enemy.HP == 0:
-            menu(6, player.HP)
+            movie(19, Age19)
+            menu(6, player.HP) #kill estarossa
 
         elapsed_time1 += clock.tick(FPS2)
         frameCount += 1
@@ -321,7 +423,18 @@ def ThirdStage(hp):
 
 # After winning
 def GameOver():
-    return
+    font_end = pygame.font.Font('freesansbold.ttf', 40)
+    while 1:
+        SCREEN3.blit(FINALBG, (0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
+                pygame.quit()
+                sys.exit()
+        text = font_end.render("You Win", True, (BLACK))
+        textRect = text.get_rect()
+        textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
+        SCREEN3.blit(text, textRect)
+        pygame.display.update()
 
 #Start Menu
 def menu(menu_count, val):
@@ -338,7 +451,7 @@ def menu(menu_count, val):
             scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
             SCREEN.blit(score, scoreRect)
         elif menu_count == 2:
-            text = font_menu.render("Moving to Stage 2, Press any Key to Start:", True, BLACK)
+            text = font_menu.render("Moving to Stage 3, Press any Key to Start:", True, BLACK)
         elif menu_count == 3:
             text = font_menu.render("You Died, Press any Key to Restart", True, BLACK)
             enemy_hp = font_menu.render("Enemy HP: " + str(val), True, BLACK)
@@ -346,11 +459,11 @@ def menu(menu_count, val):
             hpRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
             SCREEN2.blit(enemy_hp, hpRect)
         elif menu_count == 4:
-            text = font_menu.render("Moving to Stage 3, Press any Key to Start:", True, BLACK)
+            text = font_menu.render("Moving to Stage 4, Press any Key to Start:", True, BLACK)
             player_hp = font_menu.render("HP Remaining: " + str(val), True, BLACK)
             hpRect = player_hp.get_rect()
             hpRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
-            SCREEN2.blit(player_hp, hpRect)
+            SCREEN2.blit(player_hp, hpRect)     # to cahne screen2
         elif menu_count == 5:
             text = font_menu.render("You Died, Press any Key to Restart", True, BLACK)
             enemy_hp = font_menu.render("Enemy HP: " + str(val), True, BLACK)
@@ -358,30 +471,35 @@ def menu(menu_count, val):
             hpRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
             SCREEN2.blit(enemy_hp, hpRect)
         elif menu_count == 6:
-            text = font_menu.render("You Win, World has been Saved", True, BLACK)
-            player_hp = font_menu.render("HP Remaining: " + str(val), True, BLACK)
-            hpRect = player_hp.get_rect()
-            hpRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
-            SCREEN2.blit(player_hp, hpRect)
+            GameOver()
+        elif menu_count == 7:
+            text = font_menu.render("Moving to Stage 2, Press any Key to Start:", True, (BLACK))
+        elif menu_count == 8:
+            text = font_menu.render("Press any Key to Restart", True, BLACK)
         textRect = text.get_rect()
         textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         SCREEN.blit(text, textRect)
-        if menu_count == 4:
-            SCREEN.blit(SOVEREIGN, (SCREEN_WIDTH // 2 - 75, SCREEN_HEIGHT // 2 - 140))
+        if menu_count == 2:
+            SCREEN.blit(SOVEREIGN, (SCREEN_WIDTH // 2 - 50, SCREEN_HEIGHT // 2 - 180))
+        elif menu_count == 4:
+            SCREEN.blit(CHAMPION_SHOW, (SCREEN_WIDTH // 2 - 115, SCREEN_HEIGHT // 2 - 210))
         else:
-            SCREEN.blit(RUNNING, (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 140))
+            SCREEN.blit(RUNNING, (SCREEN_WIDTH // 2 - 20, SCREEN_HEIGHT // 2 - 150))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-            if event.type == pygame.KEYDOWN and (menu_count == 0 or menu_count == 1 or menu_count == 3 or menu_count == 5):
+            if event.type == pygame.KEYDOWN and (menu_count == 1 or menu_count == 3 or menu_count == 5 or menu_count == 0 or menu_count == 8):
+                SecondStage()
+            if event.type == pygame.KEYDOWN and menu_count == 7:
                 FirstStage()
             if event.type == pygame.KEYDOWN and menu_count == 2:
-                SecondStage()
+                movie(14, Age19)
+                ThirdStage()
             if event.type == pygame.KEYDOWN and menu_count == 4:
-                ThirdStage(val)
-            if event.type == pygame.KEYDOWN and menu_count == 6:
+                movie(16, Age19)
+                FourthStage(val)
 
 def start_age():
     global Age19
@@ -401,12 +519,17 @@ def start_age():
                 sys.exit()
             elif userInput[pygame.K_UP]:
                 Age19 = True
+                movie(10, Age19)
                 menu(menu_count=0, val=0)
             elif userInput[pygame.K_DOWN]:
                 Age19 = False
+                movie(10, Age19)
                 menu(menu_count=0, val=0)
 
-#start_age()
-ThirdStage(5)
+start_age()
+#FourthStage(5)
+#ThirdStage()
+#FirstStage()
+#menu(4,5)
 # use pygame.transform.fns to change img dimensions and rotate if necessary
 #step_index

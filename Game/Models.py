@@ -3,9 +3,87 @@ import random
 
 from Init import *
 
+class Weakling:
+    X_POS = 105
+    Y_POS = 105
+    POWER_LVL = 5
+    def __init__(self):
+        self.image = PRIDE
+        self.rect = self.image.get_rect()
+        self.rect.x = self.X_POS
+        self.rect.y = self.Y_POS
+
+    def draw(self, SCREEN):
+        SCREEN.blit(self.image, (self.rect.x, self.rect.y))
+
+
+class Map:
+    def __init__(self):
+        self.field = random.randint(0,2)
+        self.SPAWN_SITE = [[random.randint(0,2) for i in range(9)] for j in range(5)]
+        self.SPAWN_SITE[0][0] = -1
+        if self.field == 0:
+            self.SPAWN_SITE [0][1] = 0
+        elif self.field == 1:
+            self.SPAWN_SITE[1][0] = 0
+        elif self.field == 2:
+            self.SPAWN_SITE[0][1] = 0
+            self.SPAWN_SITE[1][0] = 0
+        for i in range(2):
+            for j in range(8):
+                self.SPAWN_SITE[i+3][j] += 2
+        for i in range(3):
+            for j in range(2):
+                self.SPAWN_SITE[i][j+7] += 2
+        self.SPAWN_SITE[4][8] = -1
+        self.SPAWN_SITE[3][8] = -1
+
+
+class Spawn:
+    def __init__(self, type, i, j):
+        self.type = type
+        if self.type == 0:
+            self.power = 3
+        elif self.type == 1:
+            self.power = 5
+        elif self.type == 2:
+            self.power = 10
+        elif self.type == 3:
+            self.power = 25
+        elif self.type == 4:
+            self.power = 50
+        self.image = SPAWN[self.type]
+        self.rect = self.image.get_rect()
+        self.rect.x = (i * 100) + 105
+        self.rect.y = (j * 100) + 105
+
+    def populate(self, SCREEN):
+        font = pygame.font.Font('freesansbold.ttf', 20)
+        SCREEN.blit(self.image, (self.rect.x, self.rect.y))
+        Power = font.render(str(self.power), 1, YELLOW)
+        SCREEN.blit(Power, (self.rect.x, self.rect.y))
+
+
+class Boss:
+    X_POS = 900
+    Y_POS = 400
+    POWER_LVL = 500
+    def __init__(self):
+        self.image = BOSS
+        self.boss_rect = self.image.get_rect()
+        self.boss_rect.x = self.X_POS
+        self.boss_rect.y = self.Y_POS
+
+    def draw(self, SCREEN):
+        font = pygame.font.Font('freesansbold.ttf', 20)
+        SCREEN.blit(self.image, (self.boss_rect.x, self.boss_rect.y))
+        Power = font.render(str(self.POWER_LVL), 1, RED)
+        SCREEN.blit(Power, (self.boss_rect.x, self.boss_rect.y))
+
+
 class Man:
     X_POS = 80
-    Y_POS = 300
+    Y_POS = 270
     Y_POS_DUCK = 340
     JUMP_SPEED = 8.5
 
@@ -91,14 +169,14 @@ class SmallCactus(Obstacle):
     def __init__(self, image):
         self.type = random.randint(0, 5)
         super().__init__(image, self.type)
-        self.video_value = 2
+        self.video_value = 0
         if self.type == 0 or self.type == 1:
             self.rect.y = 325
         elif self.type == 2 or self.type == 3:
             self.rect.y = 300
         else:
             self.rect.y = 335
-            self.video_value = 3
+            self.video_value = 1
 
     def identify(self):
         return self.video_value
@@ -106,17 +184,20 @@ class SmallCactus(Obstacle):
 
 class LargeCactus(Obstacle):
     def __init__(self, image):
-        self.type = random.randint(0, 5)
+        self.type = random.randint(0, 4)
         super().__init__(image, self.type)
-        if self.type == 3 or self.type == 4 or self.type == 5:
+        if self.type == 5:
             self.rect.y = 325
+        elif self.type == 3:
+            self.rect.y = 300
+        elif self.type == 4:
+            self.rect.y = 290
         else:
             self.rect.y = 300
-        #self.rect.y = 300
 
     def identify(self):
-        value = self.type + 3
-        return 2
+        value = self.type + 2
+        return value
 
 
 class Drone(Obstacle):
@@ -133,8 +214,7 @@ class Drone(Obstacle):
         self.index += 1
 
     def identify(self):
-        return 2
-        #return 7
+        return 7
 
 
 class Shrine(Obstacle):
@@ -207,11 +287,11 @@ class Sovereign:
 class Eye:
     X_POS = SCREEN_WIDTH - EYE_WIDTH
     Y_POS = (SCREEN_HEIGHT // 2) - (EYE_HEIGHT // 2)
-    HP = 3           #to change 25
+    HP = 1           #to change 25 3 test
     COUNT = 0
     START_ATTACK = False
     RAGE = False
-    RAGE_TIME = 1       # to change 0
+    RAGE_TIME = 0       # to change 0
     def __init__(self):
         self.image = EYE
         self.eye_rect = self.image.get_rect()
@@ -260,7 +340,7 @@ class Attack1:
         self.part1.x -= self.SPEED
         self.part2.x -= self.SPEED
         self.part3.x -= self.SPEED
-        if self.part1.x < 0:
+        if self.part1.x < -175:
             enemy_attacks.pop()
 
     def draw(self,SCREEN2):
@@ -293,6 +373,7 @@ class Champion:
     TASK1 = []
     TASK2 = -1
     TASK_NUM = 0
+    TASK1_FAIL = 0
     def __init__(self):
         self.image = CHAMPION
         self.champ_rect = self.image.get_rect()
@@ -306,7 +387,7 @@ class Champion:
 class Demon:
     X_POS = 770
     Y_POS = 200
-    HP = 3
+    HP = 10    # to change 10 3 test
     TASK1 = []
     TASK2 = -1
     TASK1_MAX_CNT = 5
