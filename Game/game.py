@@ -7,8 +7,7 @@ from Videos import *
 from Init import *
 
 pygame.init()
-#pygame.mixer.init()
-#pygame.mixer.music.load("Assets/Video/test.mp3")   use the method used in dino game git
+
 
 #Stage 0
 def Background1(player):

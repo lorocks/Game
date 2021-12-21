@@ -2,6 +2,8 @@ import cv2
 import imutils
 import pygame
 
+pygame.mixer.init()
+
 def rescale_frame(frame, scale):
     width = int(frame.shape[1] * scale)
     height = int(frame.shape[0] * scale)
@@ -11,7 +13,7 @@ def rescale_frame(frame, scale):
 def movie(num, Age19):
     if Age19 == False and num == 7:
         num += 1
-
+    num = 14
     if num == 0:
         VIDEO = cv2.VideoCapture("Assets/Video/CactusDeath.mp4")
     elif num == 1:
@@ -38,28 +40,45 @@ def movie(num, Age19):
         VIDEO = cv2.VideoCapture("Assets/Video/GalandKills.mp4")
     elif num == 12:
         VIDEO = cv2.VideoCapture("Assets/Video/KillGaland.mp4")
+        Audio = pygame.mixer.Sound("Assets/Audio/KillGaland.mp3")
+        Audio.play()
     elif num == 13:
         VIDEO = cv2.VideoCapture("Assets/Video/OrcArmy.mp4")
     elif num == 14:
         VIDEO = cv2.VideoCapture("Assets/Video/EyeComes.mp4")
+        Audio = pygame.mixer.Sound("Assets/Audio/EyeComes.mp3")
+        Audio.play()
     elif num == 15:
         VIDEO = cv2.VideoCapture("Assets/Video/Eyegone.mp4")
     elif num == 16:
         VIDEO = cv2.VideoCapture("Assets/Video/Confrontation.mp4")
+        Audio = pygame.mixer.Sound("Assets/Audio/Confrontation.mp3")
+        Audio.play()
     elif num == 17:
         VIDEO = cv2.VideoCapture("Assets/Video/FirstHit.mkv")
+        Audio = pygame.mixer.Sound("Assets/Audio/FirstHit.mp3")
+        Audio.play()
     elif num == 18:
         VIDEO = cv2.VideoCapture("Assets/Video/SecondHit.mp4")
+        Audio = pygame.mixer.Sound("Assets/Audio/SecondHit.mp3")
+        Audio.play()
     elif num == 19:
         VIDEO = cv2.VideoCapture("Assets/Video/FinalHit.mp4")
+        Audio = pygame.mixer.Sound("Assets/Audio/FinalHit.mp3")
+        Audio.play()
     elif num == 20:
         VIDEO = cv2.VideoCapture("Assets/Video/GetHit1.mkv")
+        Audio = pygame.mixer.Sound("Assets/Audio/GetHit1.mp3")
+        Audio.play()
     elif num == 21:
         VIDEO = cv2.VideoCapture("Assets/Video/GetHit2.mkv")
+        Audio = pygame.mixer.Sound("Assets/Audio/GetHit2.mp3")
+        Audio.play()
     elif num == 22:
         VIDEO = cv2.VideoCapture("Assets/Video/GetHit3.mkv")
+        Audio = pygame.mixer.Sound("Assets/Audio/GetHit3.mp3")
+        Audio.play()
 
-    #pygame.mixer.music.play()
     if num == -1:
         while (VIDEO.isOpened()):
             isTrue, frame = VIDEO.read()
@@ -101,6 +120,15 @@ def movie(num, Age19):
             if isTrue:
                 cv2.imshow("Video Resized", frame_resized)
                 if cv2.waitKey(25) & 0xFF == ord("q"):
+                    break
+            else:
+                break
+    elif num == 12 or num == 14 or num > 15:
+        while (VIDEO.isOpened()):
+            isTrue, frame = VIDEO.read()
+            if isTrue:
+                cv2.imshow('Frame', frame)
+                if cv2.waitKey(29) & 0xFF == ord('q'):
                     break
             else:
                 break
