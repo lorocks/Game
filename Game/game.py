@@ -8,6 +8,178 @@ from Init import *
 
 pygame.init()
 
+#Music
+BossFightAudio = pygame.mixer.Sound("Assets/Audio/MahitoDomainExpansion.mp3")
+RunAudio = pygame.mixer.Sound("Assets/Audio/EscanorTheme.mp3")
+EyeFightAudio = pygame.mixer.Sound("Assets/Audio/AshesOnFire.mp3")
+IntroAudio = pygame.mixer.Sound("Assets/Audio/YourBattle.mp3")
+
+#Guide
+def Guide(check):
+    font_guide = pygame.font.Font('freesansbold.ttf', 30)
+    exit = False
+
+    while True:
+        if exit:
+            pygame.time.wait(200)
+            break
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                exit = True
+        if check == 1:
+            SCREEN.blit(RUNGUIDE, (0,0))
+            text = font_guide.render("Jump above obstacles using R or Duck using M", True, BLACK)
+        if check == 2:
+            SCREEN.fill(WHITE)
+            text = font_guide.render("Use L to move Left, M for Down, R for Right", True, BLACK)
+            text_rect = text.get_rect()
+            text_rect.x = 100
+            text_rect.y = SCREEN_HEIGHT / 2
+            SCREEN.blit(text, text_rect)
+            text = font_guide.render("Defeat enemies with lower Power Level to absorb their power", True, BLACK)
+            text_rect = text.get_rect()
+            text_rect.x = 100
+            text_rect.y = SCREEN_HEIGHT / 2 + 100
+            SCREEN.blit(text, text_rect)
+            text = font_guide.render("and grow stronger", True, BLACK)
+            text_rect = text.get_rect()
+            text_rect.x = 100
+            text_rect.y = SCREEN_HEIGHT / 2 + 130
+            SCREEN.blit(text, text_rect)
+            text = font_guide.render("Amass 500 Power Level points to defeat the Field Boss", True, BLACK)
+        if check == 3:
+            SCREEN.blit(EYEATTACKSGUIDE, (0, 0))
+            text = font_guide.render("Press R to move Up, M for Down and dodge the attacks", True, BLACK)
+        if check == 4:
+            SCREEN.blit(EYESHOOTGUIDE, (0, 0))
+            text = font_guide.render("Press L to Shoot and Hit the Eye to Win", True, BLACK)
+        if check == 5:
+            SCREEN.fill(WHITE)
+            text = font_guide.render("The Boss fight has 2 Phases, Defend and Attack", True, BLACK)
+        if check == 6:
+            SCREEN.blit(BOSSATTACKGUIDE, (0, 0))
+            text = font_guide.render("The Boss will Attack first using his Darkness", True, BLACK)
+        if check == 7:
+            SCREEN.fill(WHITE)
+            text = font_guide.render("The Darkness will appear in 3 locations", True, BLACK)
+            text_rect = text.get_rect()
+            text_rect.x = 100
+            text_rect.y = SCREEN_HEIGHT / 2
+            SCREEN.blit(text, text_rect)
+            text = font_guide.render("Properly remember the order of attack and input using the controls", True, BLACK)
+            text_rect = text.get_rect()
+            text_rect.x = 100
+            text_rect.y = SCREEN_HEIGHT / 2 + 100
+            SCREEN.blit(text, text_rect)
+            text = font_guide.render("Left - L, Middle - M, Right - R", True, BLACK)
+            text_rect = text.get_rect()
+            text_rect.x = 100
+            text_rect.y = SCREEN_HEIGHT / 2 + 130
+            SCREEN.blit(text, text_rect)
+            text = font_guide.render("Input correct order to not take Damage", True, BLACK)
+        if check == 8:
+            SCREEN.fill(WHITE)
+            text = font_guide.render("In the second phase, You have a 50% chance to hit the Boss", True, BLACK)
+            text_rect = text.get_rect()
+            text_rect.x = 100
+            text_rect.y = SCREEN_HEIGHT / 2
+            SCREEN.blit(text, text_rect)
+            text = font_guide.render("through his Darkness", True, BLACK)
+            text_rect = text.get_rect()
+            text_rect.x = 100
+            text_rect.y = SCREEN_HEIGHT / 2 + 30
+            SCREEN.blit(text, text_rect)
+            text = font_guide.render("It's a game of Luck!", True, BLACK)
+            text_rect = text.get_rect()
+            text_rect.x = 100
+            text_rect.y = SCREEN_HEIGHT / 2 + 130
+            SCREEN.blit(text, text_rect)
+            text = font_guide.render("Use M and R to input", True, BLACK)
+        text_rect = text.get_rect()
+        text_rect.x = 100
+        text_rect.y = SCREEN_HEIGHT / 2 + 225
+        SCREEN.blit(text, text_rect)
+
+        pygame.display.update()
+
+
+#Dialogue - to be added
+def Dialogue(string, prevstring):
+    font_dialogue = pygame.font.Font('freesansbold.ttf', 40)
+    prevtext = prevstring
+    text = ''
+    exit = False
+    for i in range(len(string)):
+        if len(text) != len(string):
+            text += string[i]
+        SCREEN.fill(WHITE)
+        text_surface = font_dialogue.render(text, True, BLACK)
+        prev_text_surface = font_dialogue.render(prevtext, True, BLACK)
+        text_rect = text_surface.get_rect()
+        prev_text_rect = text_surface.get_rect()
+        text_rect.x = 100
+        text_rect.y = SCREEN_HEIGHT / 2 + 50
+        prev_text_rect.x = 100
+        prev_text_rect.y = (SCREEN_HEIGHT / 2)
+        #text_rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        #prev_text_rect.center = (SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - 30)
+        SCREEN.blit(prev_text_surface, prev_text_rect)
+        SCREEN.blit(text_surface, text_rect)
+        pygame.display.update()
+        pygame.time.wait(100)
+        if exit:
+            pygame.time.wait(200)
+            break
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                text = string
+                exit = True
+
+
+def DialogueIntoMenu(string, menu_check, val):
+    font_dialogue = pygame.font.Font('freesansbold.ttf', 40)
+    text = ''
+    exit = False
+    for i in range(len(string)):
+        if len(text) != len(string):
+            text += string[i]
+        SCREEN.fill(WHITE)
+        text_surface = font_dialogue.render(text, True, BLACK)
+        text_rect = text_surface.get_rect()
+        text_rect.x = 100
+        text_rect.y = SCREEN_HEIGHT / 2
+        #text_rect.center = (SCREEN_WIDTH / 2,SCREEN_HEIGHT / 2)
+        SCREEN.blit(text_surface, text_rect)
+        pygame.display.update()
+        pygame.time.wait(175)
+        if exit:
+            break
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                text = string
+                exit = True
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if menu_check == -1:
+                    Age()
+                else:
+                    menu(menu_check, val)
+
+
 
 #Stage 0
 def Background1(player):
@@ -44,9 +216,9 @@ def get_map(field, player):
 
 def isDoable():
     if totalPower < 600:
-        FirstStage()
+        SecondStage()
 
-def FirstStage():
+def SecondStage():
     doableCheck = False
     player = Weakling()
     field = Map()
@@ -77,7 +249,11 @@ def FirstStage():
         if player.rect.colliderect(enemy.boss_rect):
             if player.POWER_LVL >= enemy.POWER_LVL:
                 movie(12, Age19)
-                menu(2,0)
+                for i in range(len(EYEDIALOGUE) - 1):
+                    i += 1
+                    Dialogue(EYEDIALOGUE[i], EYEDIALOGUE[i - 1])
+                DialogueIntoMenu(EYEDIALOGUEEND, 2, 0)
+                #menu(2,0)
             else:
                 movie(11, Age19)
                 menu(8,0)
@@ -126,7 +302,7 @@ def add_obstacles():
         if len(obstacles) == 0:
             obstacles.append(Shrine(SHRINE))
 
-def SecondStage():
+def FirstStage():
     global game_speed, x_pos_bg, y_pos_bg, points, obstacles, font, Age19
     #clock = pygame.time.Clock()
     player = Man()
@@ -139,6 +315,8 @@ def SecondStage():
     FPS1 = 30
 
     while 1:
+        if not pygame.mixer.get_busy():
+            RunAudio.play()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -158,10 +336,16 @@ def SecondStage():
             obstacle.update(game_speed,obstacles)
             if player.man_rect.colliderect(obstacle.rect) and obstacle.identify() == 9:
                 pygame.time.delay(1000)
+                RunAudio.stop()
                 movie(obstacle.identify(), Age19)
-                menu(7, 0)
+                for i in range(len(FIELDDIALOGUE) - 1):
+                    i += 1
+                    Dialogue(FIELDDIALOGUE[i], FIELDDIALOGUE[i-1])
+                DialogueIntoMenu(FIELDDIALOGUEEND, 7, 0)
+                #menu(7, 0)
             elif player.man_rect.colliderect(obstacle.rect):
                 pygame.time.delay(1000)
+                RunAudio.stop()
                 movie(obstacle.identify(), Age19)
                 menu(1, points)
 
@@ -196,6 +380,8 @@ def ThirdStage():
     SCREEN2 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT + 100))
 
     while 1:
+        if not pygame.mixer.get_busy():
+            EyeFightAudio.play()
         Background3(player, enemy)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -221,7 +407,7 @@ def ThirdStage():
         num = random.randint(0, 2)
         if not enemy.START_ATTACK:
             enemy.start_attack()
-        elif ((enemy.HP == 10 and enemy.RAGE_TIME == 0) or (enemy.HP == 1 and enemy.RAGE_TIME == 1))  and enemy.START_ATTACK:    #to cahneg 24 to 10
+        elif ((enemy.HP == 10 and enemy.RAGE_TIME == 0) or (enemy.HP == 1 and enemy.RAGE_TIME == 1)) and enemy.START_ATTACK:    #to cahneg 24 to 10
             if len(enemy_attacks) == 0:
                 enemy_attacks.append(Attack2(ATTACK2))
                 enemy.RAGE = True
@@ -246,10 +432,16 @@ def ThirdStage():
 
         if player.HP == 0:
             pygame.time.delay(1000)
+            EyeFightAudio.stop()
             menu(3, enemy.HP) # die to eye
         if enemy.HP == 0:
+            EyeFightAudio.stop()
             movie(15, Age19)
-            menu(4, player.HP)
+            for i in range(len(BOSSDIALOGUE) - 1):
+                i += 1
+                Dialogue(BOSSDIALOGUE[i], BOSSDIALOGUE[i - 1])
+            DialogueIntoMenu(BOSSDIALOGUEEND, 4, player.HP)
+            #menu(4, player.HP)
         clock.tick(FPS2)
         pygame.display.update()
 
@@ -329,6 +521,8 @@ def FourthStage(hp):
                         player.TASK2 = 0
                     input = False
     while 1:
+        if not pygame.mixer.get_busy():
+            BossFightAudio.play()
         Background4(player, enemy)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -391,22 +585,32 @@ def FourthStage(hp):
 
         if (enemy.HP == 5 or enemy.HP == 2) and vidShow1:
             if enemy.HP == 5:
+                pygame.mixer.pause()
                 movie(17, Age19)
+                pygame.mixer.unpause()
             if enemy.HP == 2:
+                pygame.mixer.pause()
                 movie(18, Age19)
+                pygame.mixer.unpause()
             vidShow1 = False
         if (player.HP == 3 or player.HP == 1) and vidShow2:
             if player.HP == 3:
+                pygame.mixer.pause()
                 movie(20, Age19)
+                pygame.mixer.unpause()
             if player.HP == 1:
+                pygame.mixer.pause()
                 movie(21, Age19)
+                pygame.mixer.unpause()
             vidShow2 = False
 
         if player.HP == 0:
             pygame.time.delay(1000)
+            BossFightAudio.stop()
             movie(22, Age19)
             menu(5, enemy.HP) #die to estarossa
         if enemy.HP == 0:
+            BossFightAudio.stop()
             movie(19, Age19)
             menu(6, player.HP) #kill estarossa
 
@@ -437,7 +641,7 @@ def GameOver():
 
 #Start Menu
 def menu(menu_count, val):
-    while 1:
+    while True:
         SCREEN.fill(WHITE)
         font_menu = pygame.font.Font('freesansbold.ttf', 30)
 
@@ -490,22 +694,35 @@ def menu(menu_count, val):
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN and (menu_count == 1 or menu_count == 3 or menu_count == 5 or menu_count == 0 or menu_count == 8):
-                SecondStage()
-            if event.type == pygame.KEYDOWN and menu_count == 7:
+                Guide(1)
+                RunAudio.play()
                 FirstStage()
+            if event.type == pygame.KEYDOWN and menu_count == 7:
+                Guide(2)
+                SecondStage()
             if event.type == pygame.KEYDOWN and menu_count == 2:
+                Guide(3)
+                Guide(4)
                 movie(14, Age19)
+                EyeFightAudio.play()
                 ThirdStage()
             if event.type == pygame.KEYDOWN and menu_count == 4:
+                Guide(5)
+                Guide(6)
+                Guide(7)
+                Guide(8)
                 movie(16, Age19)
+                BossFightAudio.play()
                 FourthStage(val)
 
-def start_age():
+def Age():
     global Age19
+
     while 1:
         SCREEN.fill(WHITE)
         font = pygame.font.Font('freesansbold.ttf', 30)
-        text = font.render("Up Key for 18+, Down Key for <18", True, BLACK)
+        AgeSelection = "Up Key for 18+, Down Key for <18"
+        text = font.render(AgeSelection, True, BLACK)
         textRect = text.get_rect()
         textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         SCREEN.blit(text, textRect)
@@ -525,10 +742,42 @@ def start_age():
                 movie(10, Age19)
                 menu(menu_count=0, val=0)
 
-start_age()
-#FourthStage(5)
-#ThirdStage()
-#FirstStage()
-#menu(4,5)
-# use pygame.transform.fns to change img dimensions and rotate if necessary
-#step_index
+#Intro Screen
+def StartGame():
+    font_dialogue = pygame.font.Font('freesansbold.ttf', 30)
+    exit = False
+    while True:
+        SCREEN.blit(STARTBG, (0, 0))
+        text_surface = font_dialogue.render("Press Middle Button to Start", True, WHITE)
+        text_rect = text_surface.get_rect()
+        text_rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+        text_rect.y = SCREEN_HEIGHT * 3 / 4 + 100
+        SCREEN.blit(text_surface, text_rect)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if event.type == pygame.KEYDOWN:
+                exit = True
+        if exit:
+            IntroAudio.stop()
+            break
+
+        pygame.display.update()
+
+
+    for i in range(len(INTRODIALOGUE) - 1):
+        i += 1
+        Dialogue(INTRODIALOGUE[i], INTRODIALOGUE[i-1])
+    DialogueIntoMenu(INTRODIALOGUEEND, -1, -1)
+    #start_age()
+    #FourthStage(5)
+    #ThirdStage()
+    #SecondStage()
+    #menu(4,5)
+    # use pygame.transform.fns to change img dimensions and rotate if necessary
+    #step_index
+
+#add background music intro is start page, mahito is vs estarossa, escanor theme is first 2 stages, your battle is mine is eye fight, stop mixer is in test
+IntroAudio.play()
+StartGame()

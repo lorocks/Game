@@ -13,7 +13,7 @@ def rescale_frame(frame, scale):
 def movie(num, Age19):
     if Age19 == False and num == 7:
         num += 1
-    num = 14
+
     if num == 0:
         VIDEO = cv2.VideoCapture("Assets/Video/CactusDeath.mp4")
     elif num == 1:
