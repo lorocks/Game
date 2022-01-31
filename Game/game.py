@@ -14,6 +14,14 @@ RunAudio = pygame.mixer.Sound("Assets/Audio/EscanorTheme.mp3")
 EyeFightAudio = pygame.mixer.Sound("Assets/Audio/AshesOnFire.mp3")
 IntroAudio = pygame.mixer.Sound("Assets/Audio/YourBattle.mp3")
 
+def _write_to_screen(font_guide, texts: list[str]):
+    for i, text in enumerate(texts):
+        text = font_guide.render(text, True, BLACK)
+        text_rect = text.get_rect()
+        text_rect.x = 100
+        text_rect.y = SCREEN_HEIGHT / 2 + (i * 50)
+        SCREEN.blit(text, text_rect)
+
 #Guide
 def Guide(check):
     font_guide = pygame.font.Font('freesansbold.ttf', 30)
@@ -34,22 +42,12 @@ def Guide(check):
             text = font_guide.render("Jump above obstacles using R or Duck using M", True, BLACK)
         if check == 2:
             SCREEN.fill(WHITE)
-            text = font_guide.render("Use L to move Left, M for Down, R for Right", True, BLACK)
-            text_rect = text.get_rect()
-            text_rect.x = 100
-            text_rect.y = SCREEN_HEIGHT / 2
-            SCREEN.blit(text, text_rect)
-            text = font_guide.render("Defeat enemies with lower Power Level to absorb their power", True, BLACK)
-            text_rect = text.get_rect()
-            text_rect.x = 100
-            text_rect.y = SCREEN_HEIGHT / 2 + 100
-            SCREEN.blit(text, text_rect)
-            text = font_guide.render("and grow stronger", True, BLACK)
-            text_rect = text.get_rect()
-            text_rect.x = 100
-            text_rect.y = SCREEN_HEIGHT / 2 + 130
-            SCREEN.blit(text, text_rect)
-            text = font_guide.render("Amass 500 Power Level points to defeat the Field Boss", True, BLACK)
+            _write_to_screen(font_guide, [
+                "Use L to move Left, M for Down, R for Right",
+                "Defeat enemies with lower Power Level to absorb their power",
+                "and grow stronger",
+                "Amass 500 Power Level points to defeat the Field Boss"
+            ])
         if check == 3:
             SCREEN.blit(EYEATTACKSGUIDE, (0, 0))
             text = font_guide.render("Press R to move Up, M for Down and dodge the attacks", True, BLACK)
