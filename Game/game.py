@@ -14,17 +14,20 @@ RunAudio = pygame.mixer.Sound("Assets/Audio/EscanorTheme.mp3")
 EyeFightAudio = pygame.mixer.Sound("Assets/Audio/AshesOnFire.mp3")
 IntroAudio = pygame.mixer.Sound("Assets/Audio/YourBattle.mp3")
 
-def _write_to_screen(font_guide, texts: list[str]):
+#Fonts
+font30 = pygame.font.Font('freesansbold.ttf', 30)
+font_health = pygame.font.Font('freesansbold.ttf', 20)
+
+def WriteToScreen(texts: list[str]):
     for i, text in enumerate(texts):
-        text = font_guide.render(text, True, BLACK)
+        text = font30.render(text, True, YELLOW)
         text_rect = text.get_rect()
         text_rect.x = 100
-        text_rect.y = SCREEN_HEIGHT / 2 + (i * 50)
+        text_rect.y = SCREEN_HEIGHT / 2 + (i * 50) + 125
         SCREEN.blit(text, text_rect)
 
 #Guide
-def Guide(check):
-    font_guide = pygame.font.Font('freesansbold.ttf', 30)
+def Guide(check: int):
     exit = False
 
     while True:
@@ -39,10 +42,10 @@ def Guide(check):
                 exit = True
         if check == 1:
             SCREEN.blit(RUNGUIDE, (0,0))
-            text = font_guide.render("Jump above obstacles using R or Duck using M", True, BLACK)
+            WriteToScreen(["Jump above obstacles using R or Duck using M"])
         if check == 2:
             SCREEN.fill(WHITE)
-            _write_to_screen(font_guide, [
+            WriteToScreen([
                 "Use L to move Left, M for Down, R for Right",
                 "Defeat enemies with lower Power Level to absorb their power",
                 "and grow stronger",
@@ -50,63 +53,34 @@ def Guide(check):
             ])
         if check == 3:
             SCREEN.blit(EYEATTACKSGUIDE, (0, 0))
-            text = font_guide.render("Press R to move Up, M for Down and dodge the attacks", True, BLACK)
+            WriteToScreen(["Press R to move Up, M for Down and dodge the attacks"])
         if check == 4:
             SCREEN.blit(EYESHOOTGUIDE, (0, 0))
-            text = font_guide.render("Press L to Shoot and Hit the Eye to Win", True, BLACK)
+            WriteToScreen(["Press L to Shoot and Hit the Eye to Win"])
         if check == 5:
             SCREEN.fill(WHITE)
-            text = font_guide.render("The Boss fight has 2 Phases, Defend and Attack", True, BLACK)
+            WriteToScreen(["The Boss fight has 2 Phases, Defend and Attack"])
         if check == 6:
             SCREEN.blit(BOSSATTACKGUIDE, (0, 0))
-            text = font_guide.render("The Boss will Attack first using his Darkness", True, BLACK)
+            WriteToScreen(["The Boss will Attack first using his Darkness"])
         if check == 7:
             SCREEN.fill(WHITE)
-            text = font_guide.render("The Darkness will appear in 3 locations", True, BLACK)
-            text_rect = text.get_rect()
-            text_rect.x = 100
-            text_rect.y = SCREEN_HEIGHT / 2
-            SCREEN.blit(text, text_rect)
-            text = font_guide.render("Properly remember the order of attack and input using the controls", True, BLACK)
-            text_rect = text.get_rect()
-            text_rect.x = 100
-            text_rect.y = SCREEN_HEIGHT / 2 + 100
-            SCREEN.blit(text, text_rect)
-            text = font_guide.render("Left - L, Middle - M, Right - R", True, BLACK)
-            text_rect = text.get_rect()
-            text_rect.x = 100
-            text_rect.y = SCREEN_HEIGHT / 2 + 130
-            SCREEN.blit(text, text_rect)
-            text = font_guide.render("Input correct order to not take Damage", True, BLACK)
+            WriteToScreen(["The Darkness will appear in 3 locations",
+                              "Properly remember the order of attack and input using the controls",
+                              "Left - L, Middle - M, Right - R",
+                              "Input correct order to not take Damage"])
+
         if check == 8:
             SCREEN.fill(WHITE)
-            text = font_guide.render("In the second phase, You have a 50% chance to hit the Boss", True, BLACK)
-            text_rect = text.get_rect()
-            text_rect.x = 100
-            text_rect.y = SCREEN_HEIGHT / 2
-            SCREEN.blit(text, text_rect)
-            text = font_guide.render("through his Darkness", True, BLACK)
-            text_rect = text.get_rect()
-            text_rect.x = 100
-            text_rect.y = SCREEN_HEIGHT / 2 + 30
-            SCREEN.blit(text, text_rect)
-            text = font_guide.render("It's a game of Luck!", True, BLACK)
-            text_rect = text.get_rect()
-            text_rect.x = 100
-            text_rect.y = SCREEN_HEIGHT / 2 + 130
-            SCREEN.blit(text, text_rect)
-            text = font_guide.render("Use M and R to input", True, BLACK)
-        text_rect = text.get_rect()
-        text_rect.x = 100
-        text_rect.y = SCREEN_HEIGHT / 2 + 225
-        SCREEN.blit(text, text_rect)
+            WriteToScreen(["In the second phase, You have a 50% chance to hit the Boss",
+                              "through his Darkness",
+                              "It's a game of Luck!",
+                              "Use M and R to input"])
 
         pygame.display.update()
 
-
 #Dialogue - to be added
-def Dialogue(string, prevstring):
-    font_dialogue = pygame.font.Font('freesansbold.ttf', 40)
+def Dialogue(string: str, prevstring: str):
     prevtext = prevstring
     text = ''
     exit = False
@@ -114,16 +88,14 @@ def Dialogue(string, prevstring):
         if len(text) != len(string):
             text += string[i]
         SCREEN.fill(WHITE)
-        text_surface = font_dialogue.render(text, True, BLACK)
-        prev_text_surface = font_dialogue.render(prevtext, True, BLACK)
+        text_surface = font30.render(text, True, BLACK)
+        prev_text_surface = font30.render(prevtext, True, BLACK)
         text_rect = text_surface.get_rect()
         prev_text_rect = text_surface.get_rect()
         text_rect.x = 100
         text_rect.y = SCREEN_HEIGHT / 2 + 50
         prev_text_rect.x = 100
         prev_text_rect.y = (SCREEN_HEIGHT / 2)
-        #text_rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
-        #prev_text_rect.center = (SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) - 30)
         SCREEN.blit(prev_text_surface, prev_text_rect)
         SCREEN.blit(text_surface, text_rect)
         pygame.display.update()
@@ -139,50 +111,8 @@ def Dialogue(string, prevstring):
                 text = string
                 exit = True
 
-
-def DialogueIntoMenu(string, menu_check, val):
-    font_dialogue = pygame.font.Font('freesansbold.ttf', 40)
-    text = ''
-    exit = False
-    for i in range(len(string)):
-        if len(text) != len(string):
-            text += string[i]
-        SCREEN.fill(WHITE)
-        text_surface = font_dialogue.render(text, True, BLACK)
-        text_rect = text_surface.get_rect()
-        text_rect.x = 100
-        text_rect.y = SCREEN_HEIGHT / 2
-        #text_rect.center = (SCREEN_WIDTH / 2,SCREEN_HEIGHT / 2)
-        SCREEN.blit(text_surface, text_rect)
-        pygame.display.update()
-        pygame.time.wait(175)
-        if exit:
-            break
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                text = string
-                exit = True
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                sys.exit()
-            if event.type == pygame.KEYDOWN:
-                if menu_check == -1:
-                    Age()
-                else:
-                    menu(menu_check, val)
-
-
-
 #Stage 0
 def Background1(player):
-    global font_health
-    font_health = pygame.font.Font('freesansbold.ttf', 20)
     powerLvl = font_health.render("Power Level: " + str(player.POWER_LVL), 1, BLACK)
     SCREEN.blit(powerLvl, (10, 10))
     blockSize = 100
@@ -250,8 +180,7 @@ def SecondStage():
                 for i in range(len(EYEDIALOGUE) - 1):
                     i += 1
                     Dialogue(EYEDIALOGUE[i], EYEDIALOGUE[i - 1])
-                DialogueIntoMenu(EYEDIALOGUEEND, 2, 0)
-                #menu(2,0)
+                menu(2,0)
             else:
                 movie(11, Age19)
                 menu(8,0)
@@ -277,7 +206,7 @@ def score():
     if points % 100 == 0:
         game_speed += 1
 
-    text = font.render("Points: " + str(points), True, BLACK)
+    text = font_health.render("Points: " + str(points), True, BLACK)
     textRect = text.get_rect()
     textRect.center = (1000, 40)
     SCREEN.blit(text, textRect)
@@ -301,15 +230,13 @@ def add_obstacles():
             obstacles.append(Shrine(SHRINE))
 
 def FirstStage():
-    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, font, Age19
-    #clock = pygame.time.Clock()
+    global game_speed, x_pos_bg, y_pos_bg, points, obstacles, Age19
     player = Man()
     game_speed = 20
     x_pos_bg = 0
     y_pos_bg = 380
     points = 0
     obstacles = []
-    font = pygame.font.Font('freesansbold.ttf', 20)
     FPS1 = 30
 
     while 1:
@@ -339,8 +266,7 @@ def FirstStage():
                 for i in range(len(FIELDDIALOGUE) - 1):
                     i += 1
                     Dialogue(FIELDDIALOGUE[i], FIELDDIALOGUE[i-1])
-                DialogueIntoMenu(FIELDDIALOGUEEND, 7, 0)
-                #menu(7, 0)
+                menu(7, 0)
             elif player.man_rect.colliderect(obstacle.rect):
                 pygame.time.delay(1000)
                 RunAudio.stop()
@@ -354,7 +280,6 @@ def FirstStage():
 
 #Stage 2
 def Background3(player, enemy):
-    global font_health
     SCREEN2.blit(BG2, (0, 0))
     if player.HP < 3:
         Sovereign_HP = font_health.render("Health: " + str(player.HP), 1, RED)
@@ -370,7 +295,7 @@ def Background3(player, enemy):
     SCREEN2.blit(Eye_HP, (SCREEN_WIDTH - Eye_HP.get_width() - 10, 10))
 
 def ThirdStage():
-    global font_health, SCREEN2
+    global SCREEN2
     FPS2 = 60
     enemy_attacks = []
     player = Sovereign()
@@ -389,7 +314,6 @@ def ThirdStage():
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     player.shoot()
-
 
         userInput = pygame.key.get_pressed()
         player.draw(SCREEN2)
@@ -438,14 +362,12 @@ def ThirdStage():
             for i in range(len(BOSSDIALOGUE) - 1):
                 i += 1
                 Dialogue(BOSSDIALOGUE[i], BOSSDIALOGUE[i - 1])
-            DialogueIntoMenu(BOSSDIALOGUEEND, 4, player.HP)
-            #menu(4, player.HP)
+            menu(4, player.HP)
         clock.tick(FPS2)
         pygame.display.update()
 
 #Stage 3
 def Background4(player, enemy):
-    global font_health
     if enemy.HP < 3:
         SCREEN3.blit(BG3SWITCH, (0, 0))
     else:
@@ -463,9 +385,8 @@ def Background4(player, enemy):
     SCREEN3.blit(Champion_HP, (10, 10))
     SCREEN3.blit(Demon_HP, (SCREEN_WIDTH - Demon_HP.get_width() - 10, 10))
 
-def FourthStage(hp):
-    global SCREEN3, font_health, FPS2, player_count
-    font_health = pygame.font.Font('freesansbold.ttf', 20)           # remove line after integration
+def FourthStage(hp: int):
+    global SCREEN3, FPS2, player_count
     SCREEN3 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     #SCREEN3 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
     player = Champion()
@@ -580,7 +501,6 @@ def FourthStage(hp):
             player.TASK2 = -1
             enemy.TASK2 = -1
 
-
         if (enemy.HP == 5 or enemy.HP == 2) and vidShow1:
             if enemy.HP == 5:
                 pygame.mixer.pause()
@@ -624,59 +544,57 @@ def FourthStage(hp):
 
 # After winning
 def GameOver():
-    font_end = pygame.font.Font('freesansbold.ttf', 40)
     while 1:
         SCREEN3.blit(FINALBG, (0, 0))
         for event in pygame.event.get():
             if event.type == pygame.QUIT or event.type == pygame.KEYDOWN:
                 pygame.quit()
                 sys.exit()
-        text = font_end.render("You Win", True, (BLACK))
+        text = font30.render("You Win", True, (BLACK))
         textRect = text.get_rect()
         textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         SCREEN3.blit(text, textRect)
         pygame.display.update()
 
 #Start Menu
-def menu(menu_count, val):
+def menu(menu_count: int, val: int):
     while True:
         SCREEN.fill(WHITE)
-        font_menu = pygame.font.Font('freesansbold.ttf', 30)
 
         if menu_count == 0:
-            text = font_menu.render("Press any Key to Start:", True, (BLACK))
+            text = font30.render("Press any Key to Start:", True, (BLACK))
         elif menu_count == 1:
-            text = font_menu.render("Press any Key to Restart", True, BLACK)
-            score = font_menu.render("Your Score: " + str(val), True, BLACK)
+            text = font30.render("Press any Key to Restart", True, BLACK)
+            score = font30.render("Your Score: " + str(val), True, BLACK)
             scoreRect = score.get_rect()
             scoreRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
             SCREEN.blit(score, scoreRect)
         elif menu_count == 2:
-            text = font_menu.render("Moving to Stage 3, Press any Key to Start:", True, BLACK)
+            text = font30.render("Moving to Stage 3, Press any Key to Start:", True, BLACK)
         elif menu_count == 3:
-            text = font_menu.render("You Died, Press any Key to Restart", True, BLACK)
-            enemy_hp = font_menu.render("Enemy HP: " + str(val), True, BLACK)
+            text = font30.render("You Died, Press any Key to Restart", True, BLACK)
+            enemy_hp = font30.render("Enemy HP: " + str(val), True, BLACK)
             hpRect = enemy_hp.get_rect()
             hpRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
             SCREEN2.blit(enemy_hp, hpRect)
         elif menu_count == 4:
-            text = font_menu.render("Moving to Stage 4, Press any Key to Start:", True, BLACK)
-            player_hp = font_menu.render("HP Remaining: " + str(val), True, BLACK)
+            text = font30.render("Moving to Stage 4, Press any Key to Start:", True, BLACK)
+            player_hp = font30.render("HP Remaining: " + str(val), True, BLACK)
             hpRect = player_hp.get_rect()
             hpRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
             SCREEN2.blit(player_hp, hpRect)     # to cahne screen2
         elif menu_count == 5:
-            text = font_menu.render("You Died, Press any Key to Restart", True, BLACK)
-            enemy_hp = font_menu.render("Enemy HP: " + str(val), True, BLACK)
+            text = font30.render("You Died, Press any Key to Restart", True, BLACK)
+            enemy_hp = font30.render("Enemy HP: " + str(val), True, BLACK)
             hpRect = enemy_hp.get_rect()
             hpRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 50)
             SCREEN2.blit(enemy_hp, hpRect)
         elif menu_count == 6:
             GameOver()
         elif menu_count == 7:
-            text = font_menu.render("Moving to Stage 2, Press any Key to Start:", True, (BLACK))
+            text = font30.render("Moving to Stage 2, Press any Key to Start:", True, (BLACK))
         elif menu_count == 8:
-            text = font_menu.render("Press any Key to Restart", True, BLACK)
+            text = font30.render("Press any Key to Restart", True, BLACK)
         textRect = text.get_rect()
         textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         SCREEN.blit(text, textRect)
@@ -718,9 +636,8 @@ def Age():
 
     while 1:
         SCREEN.fill(WHITE)
-        font = pygame.font.Font('freesansbold.ttf', 30)
         AgeSelection = "Up Key for 18+, Down Key for <18"
-        text = font.render(AgeSelection, True, BLACK)
+        text = font30.render(AgeSelection, True, BLACK)
         textRect = text.get_rect()
         textRect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
         SCREEN.blit(text, textRect)
@@ -742,11 +659,10 @@ def Age():
 
 #Intro Screen
 def StartGame():
-    font_dialogue = pygame.font.Font('freesansbold.ttf', 30)
     exit = False
     while True:
         SCREEN.blit(STARTBG, (0, 0))
-        text_surface = font_dialogue.render("Press Middle Button to Start", True, WHITE)
+        text_surface = font30.render("Press Middle Button to Start", True, WHITE)
         text_rect = text_surface.get_rect()
         text_rect.center = (SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
         text_rect.y = SCREEN_HEIGHT * 3 / 4 + 100
@@ -760,22 +676,12 @@ def StartGame():
         if exit:
             IntroAudio.stop()
             break
-
         pygame.display.update()
-
 
     for i in range(len(INTRODIALOGUE) - 1):
         i += 1
         Dialogue(INTRODIALOGUE[i], INTRODIALOGUE[i-1])
-    DialogueIntoMenu(INTRODIALOGUEEND, -1, -1)
-    #start_age()
-    #FourthStage(5)
-    #ThirdStage()
-    #SecondStage()
-    #menu(4,5)
-    # use pygame.transform.fns to change img dimensions and rotate if necessary
-    #step_index
+    Age()
 
-#add background music intro is start page, mahito is vs estarossa, escanor theme is first 2 stages, your battle is mine is eye fight, stop mixer is in test
 IntroAudio.play()
 StartGame()

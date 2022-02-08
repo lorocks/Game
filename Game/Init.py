@@ -90,14 +90,31 @@ EYESHOOTGUIDE = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Gu
 BOSSATTACKGUIDE = pygame.transform.scale(pygame.image.load(os.path.join("Assets/Guide", "BossAttack.png")), (SCREEN_WIDTH, SCREEN_HEIGHT))
 
 #Dialogues
-INTRODIALOGUE = ["","The World was a peaceful place until"," one day Demons invaded. They spread chaos", " and man could only run away in fear."]
+INTRODIALOGUE = ["","The World was a peaceful place until"," one day Demons invaded. They spread chaos",
+                 " and man could only run away in fear."]
 INTRODIALOGUEEND = "Escape at all costs"
 
-FIELDDIALOGUE = ["", "After running for a long time you", "come across a Shrine which is radiant.", "An angel appears and says, \" Pitiful Man,", "You Who Have Suffered The Horrors" , "Now Become The Hero Of Mankind.", "Accept This Holy Axe Rhitta. Kill,", "Grow Stronger And Avenge The Fallen\"", "Magically an axe appears before you", "just before waves of demons surrond", "you from everywhere."]
+FIELDDIALOGUE = ["", "After running for a long time you", "come across a Shrine which is radiant.",
+                 "An angel appears and says, \" Pitiful Man,", "You Who Have Suffered The Horrors" ,
+                 "Now Become The Hero Of Mankind.", "Accept This Holy Axe Rhitta. Kill,",
+                 "Grow Stronger And Avenge The Fallen\"", "Magically an axe appears before you",
+                 "just before waves of demons surrond", "you from everywhere.",
+                 "Kill the Field Boss to Escape"]
 FIELDDIALOGUEEND = "Kill the Field Boss to Escape"
 
-EYEDIALOGUE = ["", "After beating the field boss Galand,", "bright balls float into Rhitta from", "the bodies of the dead demons. You feel", "power flowing into you as more light is absorbed.", "A different angel descends in front of you,", "saying \"Worthy One Who Wields Rhitta Blessed", "With The Power Of The Sun, Vanquish All", "Evil And Destroy The Darkness That Is", "Estarossa\". The angel waves her hand", "and a portal open in front of you where", "you see a Giant Eye guarding a dark gateway", "\" Defeat The Eye To Gain Access To", "Estarossa's Realm. Beat Him And Save Humanity\""]
+EYEDIALOGUE = ["", "After beating the field boss Galand,", "bright balls float into Rhitta from",
+               "the bodies of the dead demons. You feel",
+               "power flowing into you as more light is absorbed.",
+               "A different angel descends in front of you,",
+               "saying \"Worthy One Who Wields Rhitta Blessed", "With The Power Of The Sun, Vanquish All",
+               "Evil And Destroy The Darkness That Is", "Estarossa\". The angel waves her hand",
+               "and a portal open in front of you where", "you see a Giant Eye guarding a dark gateway",
+               "\" Defeat The Eye To Gain Access To", "Estarossa's Realm. Beat Him And Save Humanity\"",
+               "Kill the Eye Monster"]
 EYEDIALOGUEEND = "Kill the Eye Monster"
 
-BOSSDIALOGUE = ["", "You stare are the dark portal that", "leads to Estarossa. The leader of Darkness,", "he who has power over it. You", "step through the portal expecting a", "bleak landscape, instead you are at a river", "and Estarossa is there waiting for you."]
+BOSSDIALOGUE = ["", "You stare are the dark portal that", "leads to Estarossa. The leader of Darkness,",
+                "he who has power over it. You", "step through the portal expecting a",
+                "bleak landscape, instead you are at a river", "and Estarossa is there waiting for you.",
+                "Kill Estarossa and Save the World"]
 BOSSDIALOGUEEND = "Kill Estarossa and Save the World"

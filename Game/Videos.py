@@ -142,4 +142,6 @@ def movie(num, Age19):
             else:
                 break
     VIDEO.release()
+    if pygame.mixer.get_busy():
+        Audio.stop()
     cv2.destroyAllWindows()
