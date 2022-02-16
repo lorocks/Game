@@ -62,8 +62,7 @@ def Guide(check: int):
                 "Use L to move Left, M for Down, R for Right",
                 "Defeat enemies with lower Power Level to absorb their power",
                 "and grow stronger",
-                "Amass 500 Power Level points to defeat the Field Boss"
-            ])
+                "Amass 500 Power Level points to defeat the Field Boss"])
         if check == 3:
             SCREEN.blit(EYEATTACKSGUIDE, (0, 0))
             WriteToScreen(["Press R to move Up, M for Down and dodge the attacks"])
@@ -82,7 +81,6 @@ def Guide(check: int):
                               "Properly remember the order of attack and input using the controls",
                               "Left - L, Middle - M, Right - R",
                               "Input correct order to not take Damage"])
-
         if check == 8:
             SCREEN.fill(WHITE)
             WriteToScreen(["In the second phase, You have a 50% chance to hit the Boss",
@@ -156,8 +154,8 @@ def Dialogue(string: str, prevstring: str):
         if spaceSwitch is False:
             keyboard.release(Key.space)
 
-#Stage 0
-def Background1(player):
+#Stage 2
+def Background2(player):
     powerLvl = font_health.render("Power Level: " + str(player.POWER_LVL), 1, BLACK)
     SCREEN.blit(powerLvl, (10, 10))
     blockSize = 100
@@ -198,7 +196,7 @@ def SecondStage():
     enemy = Boss()
     while 1:
         SCREEN.fill(WHITE)
-        Background1(player)
+        Background2(player)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -251,7 +249,7 @@ def SecondStage():
         pygame.display.update()
 
 #Stage 1
-def Background2():
+def Background1():
     global x_pos_bg, y_pos_bg
     image_width = BG.get_width()
     SCREEN.blit(BG, (x_pos_bg, y_pos_bg))
@@ -277,13 +275,13 @@ def add_obstacles():
     if Age19 and points < 30:  # to change 2500 30 test
         if len(obstacles) == 0:
             if random.randint(0, 2) == 0 or random.randint(0, 2) == 1:
-                obstacles.append(LargeCactus(OBS_AGE_19))
+                obstacles.append(LargeObs(OBS_AGE_19))
             elif random.randint(0, 2) == 2:
                 obstacles.append(Drone(DRONE))
     elif not Age19 and points < 30:  # t change 2500
         if len(obstacles) == 0:
             if random.randint(0, 2) == 0 or random.randint(0, 2) == 1:
-                obstacles.append(SmallCactus(OBS_AGE_18))
+                obstacles.append(SmallObs(OBS_AGE_18))
             elif random.randint(0, 2) == 2:
                 obstacles.append(Drone(DRONE))
     elif points > 30:  # to change 2500
@@ -328,7 +326,7 @@ def FirstStage():
 
         userInput = pygame.key.get_pressed()
 
-        Background2()
+        Background1()
 
         player.draw(SCREEN)
         player.update(userInput)
@@ -356,7 +354,7 @@ def FirstStage():
         clock.tick(FPS1)
         pygame.display.update()
 
-#Stage 2
+#Stage 3
 def Background3(player, enemy):
     SCREEN2.blit(BG2, (0, 0))
     if player.HP < 3:
@@ -460,7 +458,7 @@ def ThirdStage():
         clock.tick(FPS2)
         pygame.display.update()
 
-#Stage 3
+#Stage 4
 def Background4(player, enemy):
     if enemy.HP < 3:
         SCREEN3.blit(BG3SWITCH, (0, 0))

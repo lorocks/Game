@@ -33,8 +33,8 @@ class Map:
             for j in range(8):
                 self.SPAWN_SITE[i+3][j] += 2
         for i in range(3):
-            for j in range(2):
-                self.SPAWN_SITE[i][j+7] += 2
+            for j in range(3):
+                self.SPAWN_SITE[i][j+6] += 2
         self.SPAWN_SITE[4][8] = -1
         self.SPAWN_SITE[3][8] = -1
 
@@ -165,7 +165,7 @@ class Obstacle():
         SCREEN.blit(self.image[self.type], self.rect)
 
 
-class SmallCactus(Obstacle):
+class SmallObs(Obstacle):
     def __init__(self, image):
         self.type = random.randint(0, 5)
         super().__init__(image, self.type)
@@ -182,7 +182,7 @@ class SmallCactus(Obstacle):
         return self.video_value
 
 
-class LargeCactus(Obstacle):
+class LargeObs(Obstacle):
     def __init__(self, image):
         self.type = random.randint(0, 4)
         super().__init__(image, self.type)
