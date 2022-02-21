@@ -40,6 +40,7 @@ def WriteToScreen(texts: list[str]):
         SCREEN.blit(text, text_rect)
 
 #Guide
+#Function that calls WriteToScreen() to display the guide for the players
 def Guide(check: int):
     exit = False
 
@@ -106,7 +107,8 @@ def Guide(check: int):
 
         pygame.display.update()
 
-#Dialogue - to be added
+#Dialogue
+# Function to display dialogue on the screen
 def Dialogue(string: str, prevstring: str):
     prevtext = prevstring
     text = ''
@@ -155,6 +157,7 @@ def Dialogue(string: str, prevstring: str):
             keyboard.release(Key.space)
 
 #Stage 2
+#Display background
 def Background2(player):
     powerLvl = font_health.render("Power Level: " + str(player.POWER_LVL), 1, BLACK)
     SCREEN.blit(powerLvl, (10, 10))
@@ -164,6 +167,7 @@ def Background2(player):
             rect = pygame.Rect(x, y, blockSize, blockSize)
             pygame.draw.rect(SCREEN, BLACK, rect, 1)
 
+#display to display the map for the task in stage2, also handles the deadth or progress condition
 def get_map(field, player):
     global totalPower
     totalPower = 0
@@ -173,6 +177,7 @@ def get_map(field, player):
                 spawn = Spawn(field.SPAWN_SITE[i][j], j, i)
                 spawn.populate(SCREEN)
                 totalPower += spawn.power
+                #if the player collides with an obstacle/enemy
                 if player.rect.colliderect(spawn.rect):
                     if player.POWER_LVL > spawn.power:
                         player.POWER_LVL += spawn.power
@@ -185,10 +190,12 @@ def get_map(field, player):
                         menu(8, 0)
                     field.SPAWN_SITE[i][j] = -1
 
+#to check if the stage can be passed
 def isDoable():
     if totalPower < 600:
         SecondStage()
 
+# Stage2 main function
 def SecondStage():
     doableCheck = False
     player = Weakling()
@@ -201,6 +208,7 @@ def SecondStage():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            #change display based on user movement
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     if player.rect.x > 105:
@@ -217,6 +225,7 @@ def SecondStage():
             isDoable()
             doableCheck = True
 
+        #check to see if the player can progress to next stage
         if player.rect.colliderect(enemy.boss_rect):
             if player.POWER_LVL >= enemy.POWER_LVL:
                 movie(12, Age19)
@@ -249,6 +258,7 @@ def SecondStage():
         pygame.display.update()
 
 #Stage 1
+#Display background
 def Background1():
     global x_pos_bg, y_pos_bg
     image_width = BG.get_width()
@@ -259,6 +269,7 @@ def Background1():
         x_pos_bg = 0
     x_pos_bg -= game_speed
 
+#display score
 def score():
     global points, game_speed
     points += 1
@@ -270,6 +281,7 @@ def score():
     textRect.center = (1000, 40)
     SCREEN.blit(text, textRect)
 
+#add and display obstacles in the game
 def add_obstacles():
     global Age19, obstacles, points
     if Age19 and points < 30:  # to change 2500 30 test
@@ -288,6 +300,7 @@ def add_obstacles():
         if len(obstacles) == 0:
             obstacles.append(Shrine(SHRINE))
 
+#main Stage1 code
 def FirstStage():
     global game_speed, x_pos_bg, y_pos_bg, points, obstacles, Age19
     player = Man()
@@ -332,6 +345,7 @@ def FirstStage():
         player.update(userInput)
         add_obstacles()
 
+        # check for collisions and progresses
         for obstacle in obstacles:
             obstacle.draw(SCREEN)
             obstacle.update(game_speed,obstacles)
@@ -355,6 +369,7 @@ def FirstStage():
         pygame.display.update()
 
 #Stage 3
+#display background
 def Background3(player, enemy):
     SCREEN2.blit(BG2, (0, 0))
     if player.HP < 3:
@@ -370,6 +385,7 @@ def Background3(player, enemy):
     SCREEN2.blit(Sovereign_HP, (10, 10))
     SCREEN2.blit(Eye_HP, (SCREEN_WIDTH - Eye_HP.get_width() - 10, 10))
 
+#main Stage3 code
 def ThirdStage():
     global SCREEN2
     FPS2 = 60
@@ -386,7 +402,7 @@ def ThirdStage():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
+            # user input checking to shoot
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     player.shoot()
@@ -412,12 +428,14 @@ def ThirdStage():
         enemy.draw(SCREEN2)
         player.movement(userInput)
 
+        #check to see for bullet collisions
         if player.bullet_rect.colliderect(enemy.weak_spot_rect):
             enemy.HP -= 1
             player.bullet_rect.x += SCREEN_WIDTH - 3
         if player.bullet_rect.colliderect(enemy.eye_rect):
             player.bullet_rect.x += SCREEN_WIDTH - 3
 
+        #Code to add boss attacks in a list
         num = random.randint(0, 2)
         if not enemy.START_ATTACK:
             enemy.start_attack()
@@ -430,6 +448,7 @@ def ThirdStage():
             if len(enemy_attacks) == 0:
                 enemy_attacks.append(Attack1(ATTACK1, num))
 
+        #Display attack from the list to game
         if enemy.RAGE == True:
             for attack in enemy_attacks:
                 attack.draw(SCREEN2)
@@ -444,6 +463,7 @@ def ThirdStage():
                     player.HP -= 1
                     enemy_attacks.pop()
 
+        #progression check
         if player.HP == 0:
             pygame.time.delay(1000)
             EyeFightAudio.stop()
@@ -459,6 +479,7 @@ def ThirdStage():
         pygame.display.update()
 
 #Stage 4
+#display background
 def Background4(player, enemy):
     if enemy.HP < 3:
         SCREEN3.blit(BG3SWITCH, (0, 0))
@@ -477,10 +498,10 @@ def Background4(player, enemy):
     SCREEN3.blit(Champion_HP, (10, 10))
     SCREEN3.blit(Demon_HP, (SCREEN_WIDTH - Demon_HP.get_width() - 10, 10))
 
+#main Stage4 code
 def FourthStage(hp: int):
     global SCREEN3, FPS2, player_count
     SCREEN3 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    #SCREEN3 = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.FULLSCREEN)
     player = Champion()
     enemy = Demon()
     player.HP = hp
@@ -494,6 +515,7 @@ def FourthStage(hp: int):
     vidShow1 = True
     vidShow2 = True
 
+    #pause the game by going out of the game loop
     def pause():
         pause = True
         elapsed_time = 0
@@ -502,6 +524,7 @@ def FourthStage(hp: int):
                 pause = False
             elapsed_time += clock.tick(101)
 
+    # fucntion for getting user input for task1
     def get_task1():
         global player_count
         while player_count<enemy.TASK1_MAX_CNT:
@@ -534,6 +557,7 @@ def FourthStage(hp: int):
             if spaceSwitch is False:
                 keyboard.release(Key.space)
 
+    # fucntion for getting user input for task2
     def get_task2():
         input = True
         while input:
@@ -572,6 +596,7 @@ def FourthStage(hp: int):
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+            # user input to start the sequence
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE and player.TASK_NUM == 0:
                 player.TASK_NUM = 1
 
@@ -594,10 +619,12 @@ def FourthStage(hp: int):
         player.draw(SCREEN3)
         enemy.draw(SCREEN3)
 
+        #change difficulty of the fight
         if enemy.HP < 3 and not enemy.HARD:
             enemy.HARD = True
             enemy.TASK1_MAX_CNT = 7
 
+        #add tasks to complete
         if len(enemy.TASK1) == 0:
             enemy.TASK1 = numpy.random.randint(0,3,enemy.TASK1_MAX_CNT)
         if enemy.TASK2 == -1:
@@ -607,20 +634,25 @@ def FourthStage(hp: int):
             imageShow = True
             elapsed_time1 = 0
 
+        #display task and get the user input
         if player.TASK_NUM == 1 and enemy_count < enemy.TASK1_MAX_CNT:
+            #check used to display flashing images
             if imageShow:
                 enemy.task1(enemy.TASK1[enemy_count])
                 currentFrameCount = frameCount
                 enemy_count += 1
                 imageShow = False
+        #get user input for task1
         if enemy_count == enemy.TASK1_MAX_CNT + 1 and currentFrameCount == frameCount - 1:
             print(enemy.TASK1)
             get_task1()
             player.TASK_NUM += 1
+        #get user input for task2
         if player.TASK_NUM == 2:
             print(enemy.TASK2)
             get_task2()
             player.TASK_NUM += 1
+        #update HP based on user input for the tasks
         if player.TASK_NUM == 3:
             if (numpy.array(player.TASK1) == numpy.array(enemy.TASK1)).all() and player.TASK2 == enemy.TASK2:
                 enemy.HP -= 1
@@ -634,6 +666,7 @@ def FourthStage(hp: int):
                 if player.TASK1_FAIL > 3 == 1:
                     player.HP -= 1
                     player.TASK1_FAIL = 0
+            #reinitialise the variables to start next cycle
             player.TASK_NUM = 0
             player_count = 0
             enemy_count = 0
@@ -642,6 +675,7 @@ def FourthStage(hp: int):
             player.TASK2 = -1
             enemy.TASK2 = -1
 
+        #check to diplay videos
         if (enemy.HP == 5 or enemy.HP == 2) and vidShow1:
             if enemy.HP == 5:
                 pygame.mixer.pause()
@@ -663,6 +697,7 @@ def FourthStage(hp: int):
                 pygame.mixer.unpause()
             vidShow2 = False
 
+        #check to progress game
         if player.HP == 0:
             pygame.time.delay(1000)
             BossFightAudio.stop()
@@ -677,6 +712,8 @@ def FourthStage(hp: int):
         frameCount += 1
         clock.tick(FPS2)
         pygame.display.update()
+
+        #logic used for flashing images
         if currentFrameCount == frameCount - 1 and player.TASK_NUM == 1 and enemy_count <= enemy.TASK1_MAX_CNT:
             pause()
             if enemy_count == enemy.TASK1_MAX_CNT:
@@ -714,7 +751,7 @@ def GameOver():
         SCREEN3.blit(text, textRect)
         pygame.display.update()
 
-#Start Menu
+#Menu to connect between stages
 def menu(menu_count: int, val: int):
     while True:
         SCREEN.fill(WHITE)
@@ -805,6 +842,7 @@ def menu(menu_count: int, val: int):
         if spaceSwitch is False:
             keyboard.release(Key.space)
 
+#input user age
 def Age():
     global Age19
 
@@ -868,6 +906,22 @@ def StartGame():
             IntroAudio.stop()
             break
         pygame.display.update()
+
+        downSwitch = digital_input_down.read()
+        upSwitch = digital_input_up.read()
+        spaceSwitch = digital_input_space.read()
+        if downSwitch is True:
+            keyboard.press(Key.down)
+        if upSwitch is True:
+            keyboard.press(Key.up)
+        if spaceSwitch is True:
+            keyboard.press(Key.space)
+        if downSwitch is False:
+            keyboard.release(Key.down)
+        if upSwitch is False:
+            keyboard.release(Key.up)
+        if spaceSwitch is False:
+            keyboard.release(Key.space)
 
     for i in range(len(INTRODIALOGUE) - 1):
         i += 1
