@@ -1,4 +1,4 @@
-# SussyGame
+# Game
 <br/>
 After pulling or cloning from github <br/>
 On the command line navigate to C:\"Directory" and run the command - 'pip install -r requirements.txt'<br/>
